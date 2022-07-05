@@ -1,7 +1,7 @@
 # accord-verif-scripts
 This a standard set of scripts based to carry out
 a point-verification using the harp verification library.
-The scripts were developed during the [ACCORD MQA working week in Helsinki](https://opensource.umr-cnrm.fr/projects/accord/wiki/MQAWW202206), with contributions from James Fannon, Daniel Yazgi, Florian Weidle, Andrew Singleton and Carlos Peralta.
+The scripts were developed during the [ACCORD MQA working week in Helsinki](https://opensource.umr-cnrm.fr/projects/accord/wiki/MQAWW202206), with contributions from James Fannon, Daniel Yazgi, Florian Weidle, Carl Fortelius, Andrew Singleton and Carlos Peralta.
 
 Deterministic measures are based on what is offered in the [monitor verification package](https://hirlam.github.io/Monitor/dev/) and include: bias, rmse, stdev, equitable threat score, extreme dependency score, false-alarm rate, false-alarm ratio, frequency distribution, frequency bias, Kuiper skill score, as well as timeseries plot of daily variations versus validdate, validhour and scatter plots.
 
