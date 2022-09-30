@@ -45,7 +45,7 @@ end_date   <- ifelse(is.null(args$end_date),CONFIG$shared$end_date,args$end_date
 
 fcst_model <- CONFIG$scorecards$fcst_model
 ref_model <- CONFIG$scorecards$ref_model
-parameters <- CONFIG$scorecards$parameters
+parameters <- CONFIG$scorecards$params
 
 by_step         <- CONFIG$verif$by_step  #Read from config file
 lead_time_str <- CONFIG$verif$lead_time
@@ -73,6 +73,19 @@ selected_stations <- NULL #default
 
 # Calculation starts here
 
+#Function to do the whole calculation
+source(here("R/point_verif/fn_scorecard.R"))
+print(end_date)
+print(start_date)
+print(models_to_compare)
+print(fcst_type)
+print(fcst_path)
+print(obs_path)
+print(parameters)
+print(by_step)
+
+# Calculation starts here
+
 scorecard_data <- lapply(
   parameters,
   scorecard_function,
@@ -89,14 +102,10 @@ scorecard_data <- lapply(
   min_cases  = 5
 )
 
-
-# The old version with pooled_bootstrap_score
-#DO NOT USE, it is buggy
-#scorecard_data <- bind_bootstrap_score(scorecard_data)
-
+print(scorecard_data)
 #This one uses the new bootstrap_verify function
 scorecard_data <- bind_point_verif(scorecard_data)
-print(scorecard_data)
+
 #Save the verif data. Will this work here??? Only saving it for the whole domain
 #The naming of the output file is set automatically. Not changing it at this point
 #to avoid clashes with the shiny app
@@ -109,5 +118,10 @@ plot <- plot_scorecard(
   scores     = c("rmse", "stde", "bias")
 ) + theme(legend.text = element_text(size = 6)) #+ ggtitle(figtitle)
 
-ggsave(savepath)
+#ggsave(savepath)
+fw <- 7
+fh <- 4.5
+fig_units <- "in"
+fig_dpi   <- 200
+ggsave(plot,filename=pngfile,path=plot_output,width=fw,height=fh,bg="white",units=fig_units,dpi=fig_dpi,device='png')
 
