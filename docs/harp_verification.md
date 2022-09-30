@@ -8,9 +8,9 @@ point verification using the ACCORD verification scripts.
 All configuration parameters are defined in the `config` directory.
 There are 3 configuration files. 
 
-`config_file.sh`
-`config_file.R`
-`config_file.yml`
+- `config_file.sh`
+- `config_file.R`
+- `config_file.yml`
 
 ### config_file.sh
 The initial dates and options for running the verification are defined here,
