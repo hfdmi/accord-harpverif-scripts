@@ -1,4 +1,4 @@
-# Instructions for doing a point verification
+# Instructions for running a point verification
 
 The instructions below describe how to carry out a deterministic
 point verification using the ACCORD verification scripts.
