@@ -75,14 +75,6 @@ selected_stations <- NULL #default
 
 #Function to do the whole calculation
 source(here("R/point_verif/fn_scorecard.R"))
-print(end_date)
-print(start_date)
-print(models_to_compare)
-print(fcst_type)
-print(fcst_path)
-print(obs_path)
-print(parameters)
-print(by_step)
 
 # Calculation starts here
 

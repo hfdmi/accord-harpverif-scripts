@@ -31,8 +31,6 @@ scorecard_function <- function(
     stations   = stations,
     file_path  = fcst_path
   )
-  print("inside fn")
-  print(fcst)
 
   fcst <- common_cases(fcst)
 
