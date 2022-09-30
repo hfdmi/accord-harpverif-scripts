@@ -6,7 +6,8 @@ point verification using the ACCORD verification scripts.
 ## Modify the configuration files
 
 All configuration parameters are defined in the `config` directory.
-For a given configuration, there are 3 configuration files. 
+There are 3 configuration files. 
+
 `config_file.sh`
 `config_file.R`
 `config_file.yml`
