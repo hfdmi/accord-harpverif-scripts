@@ -39,6 +39,7 @@ fcst_model <- CONFIG$verif$fcst_model
 params <- CONFIG$pre$params
 lead_time_str <- CONFIG$verif$lead_time
 lead_time  <- eval(parse(text = lead_time_str))
+by         <- CONFIG$verif$by_step
 
 
 for (param in params)
@@ -48,6 +49,7 @@ for (param in params)
       start_date    = start_date,
       end_date      = end_date,
       fcst_model     = fcst_model,
+      by             = by,
       parameter = param,
       lead_time = lead_time,
       file_path = vfld_path,

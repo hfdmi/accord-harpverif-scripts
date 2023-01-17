@@ -1,1 +1,1 @@
-scr/master_example.sh
+scr/master_atos.sh

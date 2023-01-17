@@ -1,14 +1,6 @@
 #/bin/bash 
-
-
 ## load modules 
 module load R/4.0.4
-
-
-#THESE TWO ARE NOT IN USE!
-#INI_DATE=2022050100
-#END_DATE=2022051523
-
 #
 CONFIG_INITIAL=config_atos
  

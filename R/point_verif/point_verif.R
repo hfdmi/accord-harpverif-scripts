@@ -2,7 +2,7 @@
 
 # If you are using renv, uncomment these two lines:
 #print("Using renv. Loading environment")
-#renv::load("/home/nhd/R/harpUserScripts")
+#renv::load("/perm/sp3c/deode_verif")
 
 # Basic script to run point verification and generate the corresponding rds files
 

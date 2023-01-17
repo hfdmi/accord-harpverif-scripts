@@ -10,12 +10,15 @@
 source config/config_atos.sh
 
 ######## remove this 
-export RUN_POINT_VERF=no
-export RUN_POINT_VERF_LOCAL=no
+export RUN_POINT_VERF=yes
+export RUN_POINT_VERF_LOCAL=yes
 export RUN_VOBS2SQL=no
 export RUN_VFLD2SQL=no
-export SCORECARDS=yes
+export SCORECARDS=no
+export SHOW_WEB=yes
 ######## remove this 
+
+export SHINY_PORT=3550 # Change this number if port is busy when launching web
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then 
     echo "Running vobs2sql"
@@ -40,3 +43,7 @@ fi
 if [ "$SCORECARDS" == "yes" ]; then 
    $RS_DIR/point_verif/create_scorecards.R   
 fi 
+
+if [ "$SHOW_WEB" == "yes" ]; then
+	$RS_DIR/visualization/shiny_launch.R
+fi

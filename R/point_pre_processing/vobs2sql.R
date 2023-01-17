@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Read vobs data and save it in sqlite format
-renv::load(getwd())
+#renv::load(getwd())
 
 library(harp)
 library(argparse)
@@ -33,18 +33,21 @@ CONFIG <- conf_get_config()
  
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)
 end_date   <- ifelse(is.null(args$end_date),CONFIG$shared$end_date,args$end_date)
-vobs_path   <- CONFIG$pre$vobs_path
-obs_path   <- CONFIG$verif$obs_path
-by_step         <- CONFIG$verif$by_step  #Read from config file
-fcst_model <- CONFIG$verif$fcst_model
-lead_time  <- CONFIG$verif$lead_time
+vobs_path       <- CONFIG$pre$vobs_path
+obs_path        <- CONFIG$verif$obs_path
+by_step         <- CONFIG$verif$by_step
+by_vobs_step    <- CONFIG$pre$by_vobs_step
+fcst_model      <- CONFIG$verif$fcst_model
+lead_time       <- CONFIG$verif$lead_time
+fclen           <- CONFIG$pre$fclen
 
 
 cat("Collecting vobs data  from ",start_date," to ",end_date)
 
 obs_data <- read_obs_convert(
   start_date  = start_date,
-  end_date    = end_date,
+  end_date    = end_date+fclen ,
+  by          = by_vobs_step,
   obs_path    = vobs_path,
   sqlite_path = obs_path
   )
