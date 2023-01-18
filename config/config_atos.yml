@@ -6,8 +6,8 @@ shared:
   
 pre:
   fclen: 24
-  vfld_path: "/perm/pn56/deode_verif/cases/Spain20220503/vfld/"
-  vobs_path: "/perm/pn56/deode_verif/cases/Spain20220503/vobs/"
+  vfld_path: "/perm/sp3c/deode_verif/cases/Spain20220503/vfld/"
+  vobs_path: "/perm/sp3c/deode_verif/cases/Spain20220503/vobs/"
   by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
