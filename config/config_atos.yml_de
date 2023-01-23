@@ -1,43 +1,41 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2020100900
-  end_date: 2020101900
+  start_date: 2022050200
+  end_date:   2022050300
   
 pre:
   fclen: 48
-  vfld_path: "/perm/sp3c/deode_verif/cases/Denmark20201009/vfld/"
+  vfld_path: "/perm/sp3c/deode_verif/cases/Denmark20201009/vfld"
   vobs_path: "/perm/sp3c/deode_verif/cases/Denmark20201009/vobs/"
   by_vobs_step: "3h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
   params:
-     -AccPcp6h
-     -AccPcp12h
-     -AccPcp24h     
-#
-#    - S10m
-#    - T2m
-#    - RH2m
-#    - Pmsl
-#    - T
-#    - Cbase            
-#    - CChigh         
-#    - CClow      
-#    - CCmed        
-#    - CCtot         
-#    - D10m   
-#    - G10m    
-#    - Gmax  
-#    - Ps                                                                               
-#    - Smax               
-#    - Td2m                       
-#    - Tmax                                           
-#    - Tmin                                               
-#    - vis                
-#    - DSN
-#    - SD
-#    - Q2m
+    - S10m
+    - T2m
+    - RH2m
+    - Pmsl
+    - T
+    - AccPcp12h
+    - AccPcp1h
+    - AccPcp3h
+    - AccPcp6h          
+    - Cbase            
+    - CChigh         
+    - CClow      
+    - CCmed        
+    - CCtot         
+    - D10m   
+    - G10m    
+    - Gmax  
+    - Pcp                                
+    - Ps                                                                               
+    - Smax               
+    - Td2m                       
+    - Tmax                                           
+    - Tmin                                               
+    - vis                
 #Section to define paths for the verification
 # This section will be used by the scripts under verification
 verif:
