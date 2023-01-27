@@ -1,0 +1,87 @@
+#Section to define paths for the pre-processing
+# This section will be used by the scripts under pre_processing
+shared:
+  start_date: 2023010500
+  end_date: 2023010600
+  
+pre:
+  fclen: 24
+  vfld_path: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/vfld/"
+  vobs_path: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/vobs/"
+  by_vobs_step: "1h"
+  vfld_template:  #include one for each model if they are different. 
+    - "vfld"
+  params:
+     -Pcp
+     -AccPcp1h
+     -AccPcp3h
+     -AccPcp6h
+     -AccPcp12h
+     -AccPcp24h     
+#    - S10m
+#    - T2m
+#   - RH2m
+#    - Pmsl
+#    - T
+#    - Cbase            
+#    - CChigh         
+#    - CClow      
+#    - CCmed        
+#    - CCtot         
+#   - D10m   
+#    - G10m    
+#    - Gmax  
+#    - Ps                                                                               
+#    - Smax               
+#    - Td2m                       
+#    - Tmax                                           
+#    - Tmin                                               
+#    - vis                
+#    - DSN
+#    - SD
+#    - Q2m
+
+#Section to define paths for the verification
+# This section will be used by the scripts under verification
+verif:
+  by_step: "6h"
+  fcst_model:
+    - cmp_gnu
+      #    - cmp_intel
+      #    - cmp_intel_dual
+  lead_time: seq(0, 24, 1)
+  fcst_type: "det" #det or eps
+  grps: "leadtime"
+  fcst_path: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/FCTABLE"
+  obs_path: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/OBSTABLE"
+  verif_path: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/output/verif_results"
+#Section to define the paths for the output
+# This section will be used by the plotting scripts
+post:
+  plot_output: "/perm/sp3c/deode_verif/harp-verif-scripts/cases/DKCOEXP_cmp/output"
+  rds_path: "/perm/sp3c/deode_verif/cases/harp-verif-scripts/DKCOEXP_cmp/verif_rds"
+#This section if only for the scorecards
+scorecards:
+  ref_model: cmp_gnu
+  fcst_model: cmp_intel
+  params: 
+    - T2m
+    - S10m
+    - RH2m
+    - Pmsl
+    - AccPcp12h          
+    - AccPcp6h
+    - AccPcp3h
+    - AccPcp1h
+    - Pcp
+    - Cbase                   
+    - CClow      
+    - CCtot         
+    - D10m
+    - Gmax    
+    - AccPcp1h                                
+    - Ps                                                                               
+    - Td2m                       
+    - Tmax                                           
+    - Tmin                                               
+    - vis  

@@ -34,24 +34,23 @@ conf_get_params_details <- function(){
     Q_thr  <- c(seq(0, 0.15, 0.015))
     SD_thr <- c(0,1,3,6,10, seq(20, 80, 20))
     params <- list(
-#                 AccPcp1h = list (
-#       thresholds = Pcp_thr
-#         ),
-#                  AccPcp3h = list (
-#        thresholds = Pcp_thr
-#          ),
+                AccPcp1h = list (
+       thresholds = Pcp_thr
+          ),
+                  AccPcp3h = list (
+        thresholds = Pcp_thr
+          ),
                   AccPcp6h = list (
         thresholds = Pcp_thr
           ),
                   AccPcp12h = list (
-        thresholds = Pcp_thr
+       thresholds = Pcp_thr
           ),
-                  AccPcp24h = list (
-        thresholds = Pcp_thr
+                AccPcp24h = list (
+      thresholds = Pcp_thr
           ),
-		   
-                  Pcp = list (
-        thresholds = Pcp_thr
+                Pcp = list (
+       thresholds = Pcp_thr
           ),
 
     		T2m = list(
@@ -59,21 +58,21 @@ conf_get_params_details <- function(){
         scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
         scale_obs  = list(scale_factor = -273.15, new_units = "degC")       
     			),
-    		Td2m = list(
+   		Td2m = list(
         thresholds = T2m_thr,
         scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
         scale_obs  = list(scale_factor = -273.15, new_units = "degC")       
     			),
-#    		Tmax = list(
-#        thresholds = Tmax_thr,
-#        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
-#        scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
-#    			),    
-#    	        Tmin = list(
-#        thresholds = Tmin_thr,
-#        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
-#        scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
-#    			),    
+    		Tmax = list(
+        thresholds = Tmax_thr,
+        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
+       scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
+    			),    
+    	        Tmin = list(
+        thresholds = Tmin_thr,
+        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
+        scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
+    			),    
     		S10m = list(
         thresholds = S10m_thr      
     			),
@@ -107,21 +106,16 @@ conf_get_params_details <- function(){
                      DSN  = list (
         thresholds = SD_thr
          ),
-                     vis  = list (
-        thresholds = vis_thr
-         ),
-
     		T = list(
-        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
+       scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
         scale_obs  = list(scale_factor = -273.15, new_units = "degC"),
         vc         = "pressure"
-      
-    			)
-    
-    
+                 
+    			)    
     	      )
     		  
-    params
+         params
   
 }
+
 
