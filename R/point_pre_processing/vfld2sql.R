@@ -39,21 +39,38 @@ fcst_model <- CONFIG$verif$fcst_model
 params <- CONFIG$pre$params
 lead_time_str <- CONFIG$verif$lead_time
 lead_time  <- eval(parse(text = lead_time_str))
+do_all <- CONFIG$pre$do_all
 
-
-for (param in params)
+if (do_all) {
+   print("Processing ALL parameters in vfld files!")
+        read_forecast(
+          start_date    = start_date,
+          end_date      = end_date,
+          fcst_model     = fcst_model,
+          parameter = NULL,
+          lead_time = lead_time,
+          file_path = vfld_path,
+          file_template = file_template,
+          output_file_opts =  sqlite_opts(path = fcst_path),
+          return_data = TRUE
+        )
+}
+else
 {
-    cat("Processing ",param,"\n")
-    read_forecast(
-      start_date    = start_date,
-      end_date      = end_date,
-      fcst_model     = fcst_model,
-      parameter = param,
-      lead_time = lead_time,
-      file_path = vfld_path,
-      file_template = file_template,
-      output_file_opts =  sqlite_opts(path = fcst_path),
-      return_data = TRUE
-    )
-
+    for (param in params)
+    {
+        cat("Processing ",param,"\n")
+        read_forecast(
+          start_date    = start_date,
+          end_date      = end_date,
+          fcst_model     = fcst_model,
+          parameter = param,
+          lead_time = lead_time,
+          file_path = vfld_path,
+          file_template = file_template,
+          output_file_opts =  sqlite_opts(path = fcst_path),
+          return_data = TRUE
+        )
+    
+    }
 }
