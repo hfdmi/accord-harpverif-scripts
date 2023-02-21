@@ -1,4 +1,4 @@
-# Instructions for doing a point verification
+# Instructions for running a point verification
 
 The instructions below describe how to carry out a deterministic
 point verification using the ACCORD verification scripts.
@@ -6,10 +6,11 @@ point verification using the ACCORD verification scripts.
 ## Modify the configuration files
 
 All configuration parameters are defined in the `config` directory.
-For a given configuration, there are 3 configuration files. 
-`config_file.sh`
-`config_file.R`
-`config_file.yml`
+There are 3 configuration files. 
+
+- `config_file.sh`
+- `config_file.R`
+- `config_file.yml`
 
 ### config_file.sh
 The initial dates and options for running the verification are defined here,
