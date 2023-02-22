@@ -1,16 +1,21 @@
-#/bin/bash 
+#!/bin/bash 
  
 #This part is only for running in SLURP at ecmwf
 #SBATCH --error=main.err
 #SBATCH --output=main.out
 #SBATCH --job-name=harp_user_scripts
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=16000
+#SBATCH --ntasks=1
+#SBATCH --qos=nf
+#SBATCH --time=1:30:00
 
-#set -x  
+set -x  
 
 source config/config_atos.sh
 
 ######## remove this 
-export RUN_POINT_VERF=no
+export RUN_POINT_VERF=yes
 export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_VFLD2SQL=no
