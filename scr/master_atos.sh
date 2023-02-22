@@ -10,7 +10,7 @@
 source config/config_atos.sh
 
 ######## remove this 
-export RUN_POINT_VERF=yes
+export RUN_POINT_VERF=no
 export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_VFLD2SQL=no
@@ -43,8 +43,3 @@ fi
 if [ "$SCORECARDS" == "yes" ]; then 
    $RS_DIR/point_verif/create_scorecards.R   
 fi 
-
-if [ "$SHOW_WEB" == "yes" ]; then
-	cd $MAIN_DIR/plot_point_verif/
-	$MAIN_DIR/plot_point_verif/shiny_launch.R
-fi

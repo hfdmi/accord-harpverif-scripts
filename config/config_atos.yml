@@ -11,6 +11,7 @@ pre:
   by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
+  do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
   params:
     - Pcp
     - AccPcp1h

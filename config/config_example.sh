@@ -10,7 +10,7 @@ module load R/4.0.4
 #END_DATE=2021010223
 
 #
-CONFIG_INITIAL=config_local
+CONFIG_INITIAL=config_example
  
 #R Env
 USING_RENV=${USING_RENV-yes}
