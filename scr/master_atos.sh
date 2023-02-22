@@ -10,12 +10,12 @@
 source config/config_atos.sh
 
 ######## remove this 
-export RUN_POINT_VERF=no
+export RUN_POINT_VERF=yes
 export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
-export SHOW_WEB=yes
+export SHOW_WEB=no
 ######## remove this 
 
 export SHINY_PORT=3543 # Change this number if port is busy when launching web
