@@ -306,8 +306,8 @@ run_verif <- function(prm_info, prm_name) {
 # Use possibly from the purrr package to allow the script to continue
 # if it fails for a parameter - it returns NULL if it fails. See
 # ?safely and ?quietly if you want to retain the errors.
-#possible_run_verif <- possibly(run_verif, otherwise = NULL)
-possible_run_verif <- run_verif
+possible_run_verif <- possibly(run_verif, otherwise = NULL)
+#possible_run_verif <- run_verif
 #print(possible_run_verif)
 
 # Use imap from the purrr package to map each element of the params list

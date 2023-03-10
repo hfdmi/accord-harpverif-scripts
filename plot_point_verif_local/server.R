@@ -1,0 +1,209 @@
+# server for shiny_plot_point_verif
+library(shiny)
+library(tidyverse)
+library(png)
+library(magrittr)
+library(here)
+
+
+server <- function(input, output, session) {
+
+  # Get current directory
+  basedir <- as.character(normalizePath(file.path(paste0(here(),'/cases/DKCOEXP_cmp/'))))
+  observe({
+    if (dir.exists(basedir)) {
+      dirs <- list.dirs(basedir, recursive = FALSE)
+      updateSelectInput(session, "dir", choices = basename(dirs),selected = head(basename(dirs),1))
+    }
+  })
+  
+#  observeEvent(input$dir,{ 
+#    output$subdirText <- renderPrint({
+#      # Print selected subdirectory
+#      paste("Selected case study dir:", input$dir)
+#      })
+#  })
+
+  
+
+reactive({
+  #subdir <- as.character(input$dir) #2022050200-2022050300
+  subdir <- '2022050200-2022050300'
+  # Get list of PNG files in directory
+  png_files <- list.files(path = file.path(basedir,subdir), pattern = "\\.png")
+  choices_list <- lapply(png_files, function(x) {
+    strsplit(x, "-")[[1]]
+  })
+  split_list <- lapply(choices_list, strsplit, split = "-")
+  my_table <- do.call(rbind, split_list)
+  my_table_df <- as.data.frame(my_table)
+  colnames(my_table_df) = c("A","B","C","D","E","F","G","H","I","J")
+  my_table_df$F <- paste(my_table_df$F, my_table_df$G, my_table_df$H, sep = "-")
+  my_table_df = subset(my_table_df, select = -c(G,H,J) )
+  colnames(my_table_df) =c("Variable","Run_type","Metric","submetric","runs","period","fc_length")
+  
+  j<-unlist(my_table_df)
+  my_table_df<-matrix(j,nrow=nrow(my_table_df),ncol=length(j)/nrow(my_table_df))
+  my_table_df <- as.data.frame(my_table_df)
+  colnames(my_table_df) =c("var_four","var_two","var_five","var_six","var_three","var_one","var_seven")
+  tib <- as_tibble(my_table_df)
+  tib %<>% mutate(across(where(is.character),as_factor))
+ 
+
+#tab <- reactive({
+observe({
+tib %>%
+filter(var_one == input$var1) %>%
+filter(var_two == input$var2) %>%
+filter(var_three == input$var3) %>%
+filter(var_four == input$var4) %>%
+filter(var_five == input$var5) %>%
+filter(var_six == input$var6) %>%
+filter(var_seven == input$var7)
+})
+choices_one=sort(unique(as.character(tib$var_one)))
+
+}) 
+
+updateSelectizeInput(
+session = session,
+inputId = "var1",
+choices = choices_one,
+selected = head(choices_one,1),
+options = list(placeholder = 'select'),
+server = TRUE
+)
+
+observeEvent(input$var1,{
+choice_var2 <- sort(unique(as.character(tib$var_two[which(tib$var_one==input$var1)])))
+
+updateSelectizeInput(
+session = session,
+inputId = "var2",
+choices = choice_var2,
+selected=head(sort(unique(as.character(tib$var_two[which(tib$var_one==input$var1)]))),1)
+)
+})
+
+observeEvent(input$var2,{
+choice_var3 <- sort(unique(as.character(tib$var_three[which(tib$var_one==input$var1 &
+tib$var_two==input$var2)])))
+
+updateSelectizeInput(
+session = session,
+inputId = "var3",
+choices = choice_var3,
+selected=head(sort(unique(as.character(tib$var_three[which(tib$var_one==input$var1 &
+tib$var_two==input$var2)]))),1)
+)
+})
+
+observeEvent(input$var3,{
+choice_var4 <- sort(unique(as.character(tib$var_four[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3)])))
+updateSelectizeInput(
+session = session,
+inputId = "var4",
+choices = choice_var4,
+selected=head(sort(unique(as.character(tib$var_four[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3)]))),1)
+)
+})
+
+observeEvent(input$var4,{
+choice_var5 <- sort(unique(as.character(tib$var_five[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4)])))
+
+updateSelectizeInput(
+session = session,
+inputId = "var5",
+choices = choice_var5,
+selected=head(sort(unique(as.character(tib$var_five[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4)]))),1)
+)
+})
+
+observeEvent(input$var5,{
+choice_var6 <- sort(unique(as.character(tib$var_six[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4 &
+tib$var_five==input$var5)])))
+
+updateSelectizeInput(
+session = session,
+inputId = "var6",
+choices = choice_var6,
+selected=head(sort(unique(as.character(tib$var_six[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4 &
+tib$var_five==input$var5)]))),1)
+)
+})
+
+observeEvent(input$var6,{
+choice_var7 <- sort(unique(as.character(tib$var_seven[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4 &
+tib$var_five==input$var5 &
+tib$var_six==input$var6)])))
+
+updateSelectizeInput(
+session = session,
+inputId = "var7",
+choices = choice_var7,
+selected=tail(sort(unique(as.character(tib$var_seven[which(tib$var_one==input$var1 &
+tib$var_two==input$var2 &
+tib$var_three==input$var3 &
+tib$var_four==input$var4 &
+tib$var_five==input$var5 &
+tib$var_six==input$var6)]))),1)
+)
+})
+
+
+#output$table <- renderTable({
+#  tab()
+#  })
+
+    # Generate filename based on selected values
+  filename <- reactive({
+    paste(input$var4,input$var2,input$var5,input$var6,input$var3,input$var1,input$var7,sep="-")
+  })
+  # Get the path to the PNG file
+  png_path <- reactive({
+    as.character(normalizePath(file.path(paste0(file.path(basedir,subdir),'/', filename(),'-NA.png'))))
+  })
+
+
+ #   Read PNG file
+    png_file <- reactive({
+    readPNG(png_path())
+  })
+
+# Display PNG file
+   observe({
+   output$png_image <- renderImage({
+   list(src = as.character(png_path()),
+         contentType = "image/png",
+         alt = png_path)
+ }, deleteFile = FALSE)
+})
+   
+   observeEvent(png_path(),{ 
+     output$subdirText <- renderPrint({
+       # Print selected subdirectory
+       paste("Selected File:", png_path())
+     })
+   })
+
+}
+

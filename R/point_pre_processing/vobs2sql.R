@@ -46,7 +46,7 @@ cat("Collecting vobs data  from ",start_date," to ",end_date)
 
 obs_data <- read_obs_convert(
   start_date  = start_date,
-  end_date    = end_date+fclen ,
+  end_date    = end_date+24 ,
   by          = by_vobs_step,
   obs_path    = vobs_path,
   sqlite_path = obs_path

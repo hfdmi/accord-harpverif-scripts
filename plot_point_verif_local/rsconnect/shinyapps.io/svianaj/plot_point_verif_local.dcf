@@ -1,0 +1,13 @@
+name: plot_point_verif_local
+title: plot_point_verif_local
+username:
+account: svianaj
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8488023
+bundleId: 6921181
+url: https://svianaj.shinyapps.io/plot_point_verif_local/
+when: 1678106269.10043
+lastSyncTime: 1678106269.10044
+asMultiple: FALSE
+asStatic: FALSE

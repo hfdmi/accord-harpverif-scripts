@@ -8,7 +8,7 @@
 #SBATCH --mem-per-cpu=16000
 #SBATCH --ntasks=1
 #SBATCH --qos=nf
-#SBATCH --time=1:30:00
+#SBATCH --time=23:30:00
 
 set -x  
 
@@ -16,10 +16,10 @@ source config/config_atos.sh
 
 ######## remove this 
 export RUN_POINT_VERF=yes
-export RUN_POINT_VERF_LOCAL=no
-export RUN_VOBS2SQL=no
-export RUN_VFLD2SQL=no
-export SCORECARDS=no
+export RUN_POINT_VERF_LOCAL=yes
+export RUN_VOBS2SQL=yes
+export RUN_VFLD2SQL=yes
+export SCORECARDS=yes
 export SHOW_WEB=no
 ######## remove this 
 
@@ -48,3 +48,7 @@ fi
 if [ "$SCORECARDS" == "yes" ]; then 
    $RS_DIR/point_verif/create_scorecards.R   
 fi 
+
+if [ "$SHOW_WEB" == "yes" ]; then
+	$RS_DIR/visualization/shiny_launch.R
+fi
