@@ -1,13 +1,11 @@
 name: plot_point_verif
-title: plot_point_verif
+title: DE_330 point verification dynamic
 username:
 account: svianaj
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8111445
-bundleId: 6929892
+bundleId: 7017862
 url: https://svianaj.shinyapps.io/plot_point_verif/
-when: 1678263549.26949
-lastSyncTime: 1678263549.2695
-asMultiple: FALSE
-asStatic: FALSE
+when: 1680000768.30431
+lastSyncTime: 1680000768.30432

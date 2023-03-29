@@ -1,7 +1,9 @@
 #/bin/bash 
+
+
 ## load modules 
 module load R/4.0.4
-#
+
 CONFIG_INITIAL=config_atos
  
 #R Env
@@ -21,7 +23,7 @@ RUN_VFLD2SQL=${RUN_VFLD2SQL-yes}
 MAIN_DIR=$(pwd)
 CONFIG_DIR=$MAIN_DIR/config
 RS_DIR=$MAIN_DIR/R
-CONFIG_YAML=$CONFIG_DIR/$CONFIG_INITIAL.yml
+CONFIG_YAML=$CONFIG_DIR/$CONFIG_INITIAL.yml_${CASE_STUDY}
 CONFIG_R=$CONFIG_DIR/$CONFIG_INITIAL.R
 
 ##

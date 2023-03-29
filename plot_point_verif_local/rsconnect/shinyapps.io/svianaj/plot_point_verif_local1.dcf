@@ -1,0 +1,11 @@
+name: plot_point_verif_local1
+title: DE_330 point verification static 1
+username:
+account: svianaj
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8694945
+bundleId: 7018045
+url: https://svianaj.shinyapps.io/plot_point_verif_local1/
+when: 1680003459.16926
+lastSyncTime: 1680003459.16927

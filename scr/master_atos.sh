@@ -1,9 +1,9 @@
 #!/bin/bash 
  
 #This part is only for running in SLURP at ecmwf
-#SBATCH --error=main.err
-#SBATCH --output=main.out
-#SBATCH --job-name=harp_user_scripts
+#SBATCH --error=faro21.err
+#SBATCH --output=faro21.out
+#SBATCH --job-name=faro21
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=16000
 #SBATCH --ntasks=1
@@ -12,15 +12,18 @@
 
 set -x  
 
+export CASE_STUDY=CY46_RSL
+cd /perm/sp3c/deode_verif/
 source config/config_atos.sh
 
 ######## remove this 
-export RUN_POINT_VERF=yes
-export RUN_POINT_VERF_LOCAL=yes
-export RUN_VOBS2SQL=yes
-export RUN_VFLD2SQL=yes
-export SCORECARDS=yes
-export SHOW_WEB=no
+export RUN_POINT_VERF=no
+export RUN_POINT_VERF_LOCAL=no
+export RUN_VOBS2SQL=no
+export RUN_VFLD2SQL=no
+export SCORECARDS=no
+export SHOW_LOCAL_WEB=no
+export UPDATE_SHINYAPPSIO=yes
 ######## remove this 
 
 export SHINY_PORT=3543 # Change this number if port is busy when launching web
@@ -37,18 +40,30 @@ fi
  
 
 if [ "$RUN_POINT_VERF" == "yes" ]; then 
+   echo "Running verification to get rds files"
    $RS_DIR/point_verif/point_verif.R 
+   mkdir -p $RS_DIR/../plot_point_verif/cases/$CASE_STUDY/
+   cp -R $RS_DIR/../cases/$CASE_STUDY/output/verif_results/*.rds $RS_DIR/../plot_point_verif/cases/$CASE_STUDY/
 fi 
 
 if [ "$RUN_POINT_VERF_LOCAL" == "yes" ]; then 
-   echo "Running complete verification set"
+   echo "Running complete graphic verification set"
    $RS_DIR/point_verif/point_verif_local.R   
+   mkdir -p $RS_DIR/../plot_point_verif_local3/cases/$CASE_STUDY/
+   cp -R $RS_DIR/../cases/$CASE_STUDY/output/*/*.png $RS_DIR/../plot_point_verif_local3/cases/$CASE_STUDY/
 fi 
 
 if [ "$SCORECARDS" == "yes" ]; then 
+   echo "Running scorecards generation"
    $RS_DIR/point_verif/create_scorecards.R   
 fi 
 
 if [ "$SHOW_WEB" == "yes" ]; then
 	$RS_DIR/visualization/shiny_launch.R
 fi
+
+if [ "$UPDATE_SHINYAPPSIO" == "yes" ]; then
+        $RS_DIR/visualization/update_shinyappsio.R
+fi
+
+

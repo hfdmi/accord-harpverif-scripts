@@ -162,6 +162,9 @@ run_verif <- function(prm_info, prm_name) {
   
 }
 
+print("Parameters to process:")
+print(params)
+
 # Use possibly from the purrr package to allow the script to continue
 # if it fails for a parameter - it returns NULL if it fails. See
 # ?safely and ?quietly if you want to retain the errors.
