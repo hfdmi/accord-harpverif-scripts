@@ -1,32 +1,34 @@
 #!/bin/bash 
  
 #This part is only for running in SLURP at ecmwf
-#SBATCH --error=faro21.err
-#SBATCH --output=faro21.out
-#SBATCH --job-name=faro21
+#SBATCH --output=gav.out
+#SBATCH --job-name=gav
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=16000
 #SBATCH --ntasks=1
 #SBATCH --qos=nf
 #SBATCH --time=23:30:00
 
+#source /home/sp3c/.bashrc
 set -x  
 
-export CASE_STUDY=CY46_RSL
+export CASE_STUDY=austria_2022_interp
 cd /perm/sp3c/deode_verif/
 source config/config_atos.sh
 
-######## remove this 
+########  
 export RUN_POINT_VERF=no
 export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
+export RUN_INTERPOL2SQL=yes
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
-export SHOW_LOCAL_WEB=no
-export UPDATE_SHINYAPPSIO=yes
-######## remove this 
-
-export SHINY_PORT=3543 # Change this number if port is busy when launching web
+export SHOW_WEB_STATIC=yes
+export SHOW_WEB_DYNAMIC=no
+export UPDATE_SHINYAPPSIO=no
+export SHINYAPPS_NUMBER=1
+export SHINY_PORT=3541 # Change this number if port is busy when launching web
+######
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then 
     echo "Running vobs2sql"
@@ -37,7 +39,10 @@ if [ "$RUN_VFLD2SQL" == "yes" ]; then
      echo "Running vfld2sql"
     $RS_DIR/point_pre_processing/vfld2sql.R 
 fi 
- 
+if [ "$RUN_INTERPOL2SQL" == "yes" ]; then 
+     echo "Running interpol2sql"
+    $RS_DIR/point_pre_processing/interpol2sql.R 
+fi
 
 if [ "$RUN_POINT_VERF" == "yes" ]; then 
    echo "Running verification to get rds files"
@@ -49,8 +54,8 @@ fi
 if [ "$RUN_POINT_VERF_LOCAL" == "yes" ]; then 
    echo "Running complete graphic verification set"
    $RS_DIR/point_verif/point_verif_local.R   
-   mkdir -p $RS_DIR/../plot_point_verif_local3/cases/$CASE_STUDY/
-   cp -R $RS_DIR/../cases/$CASE_STUDY/output/*/*.png $RS_DIR/../plot_point_verif_local3/cases/$CASE_STUDY/
+   mkdir -p $RS_DIR/../plot_point_verif_local${SHINYAPPS_NUMBER}/cases/$CASE_STUDY/
+   cp -R $RS_DIR/../cases/$CASE_STUDY/output/*/*.png $RS_DIR/../plot_point_verif_local${SHINYAPPS_NUMBER}/cases/$CASE_STUDY/
 fi 
 
 if [ "$SCORECARDS" == "yes" ]; then 
@@ -58,12 +63,14 @@ if [ "$SCORECARDS" == "yes" ]; then
    $RS_DIR/point_verif/create_scorecards.R   
 fi 
 
-if [ "$SHOW_WEB" == "yes" ]; then
-	$RS_DIR/visualization/shiny_launch.R
+if [ "$SHOW_WEB_STATIC" == "yes" ]; then
+	$RS_DIR/visualization/shiny_launch_static.R
+fi
+if [ "$SHOW_WEB_DYNAMIC" == "yes" ]; then
+        $RS_DIR/visualization/shiny_launch_dynamic.R
 fi
 
 if [ "$UPDATE_SHINYAPPSIO" == "yes" ]; then
         $RS_DIR/visualization/update_shinyappsio.R
 fi
-
 

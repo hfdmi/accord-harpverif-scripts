@@ -5,7 +5,7 @@ account: svianaj
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8598490
-bundleId: 7018021
+bundleId: 7127164
 url: https://svianaj.shinyapps.io/plot_point_verif_local2/
-when: 1680003088.28604
-lastSyncTime: 1680003088.28605
+when: 1682325401.75154
+lastSyncTime: 1682325401.75155
