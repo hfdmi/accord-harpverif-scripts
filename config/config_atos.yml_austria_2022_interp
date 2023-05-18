@@ -15,46 +15,20 @@ pre:
   model_output_path: "/ec/res4/scratch/sp3c/deode_verif/grbs/austria_2022/"
   fcst_templates:  # Write template names of grib/fa files if forecast data needs to be interpolated to stations
    - "{fcst_model}/PFAROM+0{LDT3}.grib2"
-#   - "{fcst_model}/ICMSHAROM+0{LDT3}"
-#   - "{fcst_model}/ICMSHAROM+0{LDT3}.sfx"
-  clim_file: "/ec/res4/scratch/sp3c/deode_verif/grbs/austria_2022/ref_cy43/ICMSHAROM+0000x"
+   - "{fcst_model}/ICMSHAROM+0{LDT3}"
+   - "{fcst_model}/ICMSHAROM+0{LDT3}.sfx"
+  clim_file: "/ec/res4/scratch/sp3c/deode_verif/grbs/austria_2022/ref_cy43/ICMSHAROM+0000"
+  clim_param: "SPECSURFGEOPOTEN"
   interp_method: "nearest"
   params:
-    - vis                
-    - DSN
-    - SD
-    - Q2m
-    - Pcp
-    - AccPcp1h
-    - AccPcp3h
-    - AccPcp6h
-    - AccPcp12h
-    - AccPcp24h     
-    - S10m
-    - T2m
-    - RH2m
-    - Pmsl
-    - T
-    - Cbase            
-    - CChigh         
-    - CClow      
-    - CCmed        
-    - CCtot         
-    - D10m   
-    - G10m    
-    - Gmax  
-    - Ps                                                                               
-    - Smax               
-    - Td2m                       
-#    - Tmax                                           
-    - Tmin                                               
+    - T2m                                               
 #Section to define paths for the verification
 # This section will be used by the scripts under verification
 verif:
   by_step: "12h"
   fcst_model:
     - ref_cy43
-  lead_time: seq(0,48,1)
+  lead_time: seq(0,4,1)
   fcst_type: "det" #det or eps
   grps: "leadtime"
   fcst_path: "/perm/sp3c/deode_verif/cases/austria_2022_interp/FCTABLE"

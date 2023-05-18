@@ -17,7 +17,8 @@ pre:
     - "{fcst_model}/archive/{YYYY}/{MM}/{DD}/{HH}/fc{YYYY}{MM}{DD}{HH}+{LDT3}grib2"
     - "{fcst_model}/archive/{YYYY}/{MM}/{DD}/{HH}/fc{YYYY}{MM}{DD}{HH}+{LDT3}grib2_fp"
     - "{fcst_model}/archive/{YYYY}/{MM}/{DD}/{HH}/fc{YYYY}{MM}{DD}{HH}+{LDT3}grib2_sfxs"
-  params:
+  interp_method: "nearest"  
+params:
     - vis                
     - DSN
     - SD
