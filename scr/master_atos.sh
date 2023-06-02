@@ -1,8 +1,8 @@
 #!/bin/bash 
  
 #This part is only for running in SLURP at ecmwf
-#SBATCH --output=gav.out
-#SBATCH --job-name=gav
+#SBATCH --output=aude.out
+#SBATCH --job-name=aude
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=16000
 #SBATCH --ntasks=1
@@ -11,22 +11,23 @@
 
 #source /home/sp3c/.bashrc
 set -x  
+export VERIF_DIR=/perm/sp3c/deode_verif/ #The location of your copy of DE_330's HARP point verification repo
+export CASE_STUDY=austria_2022
 
-export CASE_STUDY=austria_2022_interp
-cd /perm/sp3c/deode_verif/
+cd $VERIF_DIR
 source config/config_atos.sh
 
 ########  
-export RUN_POINT_VERF=no
-export RUN_POINT_VERF_LOCAL=no
+export RUN_POINT_VERF=yes
+export RUN_POINT_VERF_LOCAL=yes
 export RUN_VOBS2SQL=no
-export RUN_INTERPOL2SQL=yes
+export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
 export SHOW_WEB_STATIC=no
 export SHOW_WEB_DYNAMIC=no
-export UPDATE_SHINYAPPSIO=no
-export SHINYAPPS_NUMBER=1
+export UPDATE_SHINYAPPSIO=yes
+export SHINYAPPS_NUMBER=3
 export SHINY_PORT=3541 # Change this number if port is busy when launching web
 ######
 

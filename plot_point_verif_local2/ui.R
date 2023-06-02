@@ -19,7 +19,7 @@ if (is_online & (!is.null(hostname) && !grepl("^ecgb", hostname))) {
 
 ui <- pageWithSidebar(
   headerPanel(
-    title = a("Monitor-like HARP's visualization tool (click for more case studies)", href="https://svianaj.shinyapps.io/plot_point_verif_local")
+    title = a("Monitor-like HARP's visualization tool (click for more case studies)", href="https://svianaj.shinyapps.io/plot_point_verif_local3")
 ),
   
 
