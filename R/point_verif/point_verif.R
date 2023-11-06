@@ -18,7 +18,6 @@ library(here)
 
 ###
 source(Sys.getenv('CONFIG_R'))
-
 ###
 parser <- ArgumentParser()
 
@@ -39,7 +38,6 @@ args <- parser$parse_args()
 ###
 CONFIG <- conf_get_config()
 params <- CONFIG$params_details
-
 
 ###
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)

@@ -60,7 +60,7 @@ plot_output <- CONFIG$post$plot_output
 ## 
 date_path <- paste0(paste(start_date,end_date,sep="-"))
 dir.create(file.path(fcst_model,date_path),recursive=TRUE)
-pngfile <- paste(paste("scorecards",fcst_model,as.character(start_date),as.character(end_date),sep="_"),".png",sep="")
+pngfile <- paste(paste("scorecards",fcst_model,"vs",ref_model,as.character(start_date),as.character(end_date),sep="_"),".png",sep="")
 savepath <- file.path(plot_output,date_path,pngfile)
 
 pooled_by <- "SID"
@@ -75,6 +75,7 @@ selected_stations <- NULL #default
 
 #Function to do the whole calculation
 source(here("R/point_verif/fn_scorecard.R"))
+source(here("R/point_verif/fn_check_obs_against_fcst.R"))
 
 # Calculation starts here
 
