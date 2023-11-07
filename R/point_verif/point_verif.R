@@ -108,6 +108,8 @@ run_verif <- function(prm_info, prm_name) {
     parameter  = prm_name,
     obs_path   = obs_path,
     stations   = pull_stations(fcst),
+    min_allowed = prm_info$obsmin_val, # If obsmin/max not set, reverts to default
+    max_allowed = prm_info$obsmax_val,
     vertical_coordinate = vertical_coordinate
   )
   
@@ -126,7 +128,7 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- check_obs_against_fcst(fcst, prm_name)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}}, num_sd_allowed=prm_info$num_sd_allowed)
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly

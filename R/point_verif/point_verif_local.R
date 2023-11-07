@@ -177,7 +177,7 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- fn_check_obs_against_fcst(fcst, prm_name, num_sd_allowed=prm_info$num_sd_allowed)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}}, num_sd_allowed=prm_info$num_sd_allowed)
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly

@@ -9,7 +9,7 @@ library(argparse)
 library(dplyr) # count, etc.
 library(stringr) # str_to_title
 library(forcats) # fcst_inorder
-library(RColorBrewer) # Some colourmaps (some of which argetpwde colourblind friendly)
+library(RColorBrewer) # Some colourmaps (some of which are colourblind friendly)
 library(gridExtra) # For grid arrange
 library(grid) # For grid arrange
 library(pracma) # For logseq
@@ -23,7 +23,7 @@ source(Sys.getenv('CONFIG_R'))
 source(here("harphub/accord-verif-scripts/R/visualization/fn_plot_point_verif.R"))
 source(here("harphub/accord-verif-scripts/R/visualization/fn_plot_aux_scores.R"))
 source(here("harphub/accord-verif-scripts/R/visualization/fn_plot_helpers.R"))
-source(here("harphub/accord-verif-scripts/R/point_verif/fn_check_obs_against_fcst.R"))
+#source(here("harphub/accord-verif-scripts/R/point_verif/fn_check_obs_against_fcst.R"))
 
 
 ###
@@ -185,7 +185,7 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- fn_check_obs_against_fcst(fcst, prm_name, num_sd_allowed=prm_info$num_sd_allowed)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}}, num_sd_allowed=prm_info$num_sd_allowed)
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
