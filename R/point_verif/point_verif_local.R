@@ -21,8 +21,6 @@ source(here("R/visualization/fn_plot_aux_scores.R"))
 source(here("R/visualization/fn_plot_helpers.R"))
 
 
-
-
 ###
 parser <- ArgumentParser()
 
@@ -43,7 +41,6 @@ args <- parser$parse_args()
 ###
 CONFIG <- conf_get_config()
 params <- CONFIG$params_details
-names(params) 
 
 ###
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)
@@ -159,8 +156,7 @@ run_verif <- function(prm_info, prm_name) {
     max_allowed = prm_info$obsmax_val,
     vertical_coordinate = vertical_coordinate
   )
- 
-
+  
   # optional rescaling of observations using the scale_obs part of the
   # params list. We use do.call to call the scale_point_forecast 
   # function with a named list containing the arguments.
@@ -171,13 +167,12 @@ run_verif <- function(prm_info, prm_name) {
     )
   }
   
-
   # Join observations to the forecast
   fcst <- join_to_fcst(fcst, obs)
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- check_obs_against_fcst(fcst, {{prm_name}}, num_sd_allowed=prm_info$num_sd_allowed)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -203,8 +198,7 @@ run_verif <- function(prm_info, prm_name) {
     sids_filter      <- station_count$SID[station_count$n > min_num_stations]
     fcst             <- filter_list(fcst,SID %in% sids_filter)
   }
-
-  
+    
   # Compute auxiliary scores and generate plots (surface only)
   if (is.na(vertical_coordinate)){
     fn_plot_aux_scores(fcst,plot_output)
@@ -304,8 +298,6 @@ run_verif <- function(prm_info, prm_name) {
   # Save the scores
   save_point_verif(verif, verif_path = verif_path)
   
-
-
   # Return the data to the calling environment (normally global)
   verif
   

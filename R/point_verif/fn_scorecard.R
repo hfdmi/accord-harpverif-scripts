@@ -27,7 +27,6 @@ scorecard_function <- function(
     fcst_model = fcst_model,
     fcst_type  = fcst_type,
     parameter  = param,
-    lead_time  = seq(0, 48, 6),
     by         = by,
     stations   = stations,
     file_path  = fcst_path
@@ -52,7 +51,6 @@ scorecard_function <- function(
   fcst <- check_obs_against_fcst(fcst, {{param}})
   
  # verif_s10m <- det_verify(s10m, S10m, thresholds = seq(2.5, 12.5, 2.5))
-  
   if (fcst_type == "det") {
     #cat("Using det forecast option in scorecard_function \n")
     bootstrap_verify(
@@ -62,8 +60,8 @@ scorecard_function <- function(
        n=n,
        min_cases = min_cases,
        pool_by = pooled_by,
-       groupings = groupings,
-       parallel=FALSE)
+       groupings = groupings)
+       #parallel=TRUE)
   } else {
     pooled_bootstrap_score(
       fcst,
