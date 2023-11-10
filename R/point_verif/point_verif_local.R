@@ -19,7 +19,7 @@ source(Sys.getenv('CONFIG_R'))
 source(here("R/visualization/fn_plot_point_verif.R"))
 source(here("R/visualization/fn_plot_aux_scores.R"))
 source(here("R/visualization/fn_plot_helpers.R"))
-source(here("R/point_verif/fn_check_obs_against_fcst.R"))
+
 
 
 
