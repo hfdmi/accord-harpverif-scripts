@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Read vobs data and save it in sqlite format
-#renv::load(getwd())
+renv::load(getwd())
 
 library(harp)
 library(argparse)

@@ -66,7 +66,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     
     # Leadtimes to plot when looking at scores_th
     #tleadtimes <- c("24","48","All")
-    tleadtimes  <- c("0","6","12","18","24","30","36","42","48") #c("All")
+    tleadtimes  <- c("All")
     
     # Cycles to consider when plotting (summary, threshold scores as fn of leadtime, theshold scores as fn of threshold)
     cycles_summary      <- c("00","12","All")
@@ -129,7 +129,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     
     # Leadtimes to plot when looking at scores_th
     #tleadtimes <- c(seq(12,48,12),"All")
-    tleadtimes <- c("0","6","12","18","24","30","36","42","48") #c("All")
+    tleadtimes <- c("All")
     
     # Cycle to consider when plotting (summary, threshold scores as fn of leadtime, theshold scores as fn of threshold)
     cycles_summary      <- c("00","12","All")

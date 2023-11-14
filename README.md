@@ -8,8 +8,6 @@ Currently, the scripts include only deterministic measures, based on what is pro
 Contributions are welcome. Please see instructions on how to contribute below.
 
 ## How to contribute
-- Fork this repository
-- Clone the forked repository to your local system
 - Add a directory with a descriptive name - you will make all of your changes in this directory
 - Under your new directory\:
   - Make a README.md file briefly describing what is in the directory and the intended use case 

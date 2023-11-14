@@ -31,7 +31,6 @@ CONFIG <- conf_get_config()
 ### 
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)
 end_date   <- ifelse(is.null(args$end_date),CONFIG$shared$end_date,args$end_date)
-by         <- CONFIG$verif$by_step
 fclen <- CONFIG$pre$fclen
 vfld_path <- CONFIG$pre$vfld_path
 file_template <- CONFIG$pre$vfld_template
@@ -53,9 +52,11 @@ if (do_all) {
           file_path = vfld_path,
           file_template = file_template,
           output_file_opts =  sqlite_opts(path = fcst_path),
-          return_data = FALSE
+          return_data = TRUE
         )
-}else{
+}
+else
+{
     for (param in params)
     {
         cat("Processing ",param,"\n")
@@ -63,13 +64,12 @@ if (do_all) {
           start_date    = start_date,
           end_date      = end_date,
           fcst_model     = fcst_model,
-          by <- by,
           parameter = param,
           lead_time = lead_time,
           file_path = vfld_path,
           file_template = file_template,
           output_file_opts =  sqlite_opts(path = fcst_path),
-          return_data = FALSE
+          return_data = TRUE
         )
     
     }
