@@ -48,6 +48,8 @@ scorecard_function <- function(
   if (nrow(obs) < 1) return(NULL)
   #This does an inner join of fcst and obs, so that only cases with matching f/o are retained
   fcst <- join_to_fcst(fcst, obs)
+  fcst <- check_obs_against_fcst(fcst, {{param}})
+  
  # verif_s10m <- det_verify(s10m, S10m, thresholds = seq(2.5, 12.5, 2.5))
   if (fcst_type == "det") {
     #cat("Using det forecast option in scorecard_function \n")
