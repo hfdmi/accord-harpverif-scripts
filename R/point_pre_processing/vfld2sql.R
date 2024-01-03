@@ -61,8 +61,9 @@ else
     {
         cat("Processing ",param,"\n")
         read_forecast(
-          start_date    = start_date,
-          end_date      = end_date,
+          #start_date    = start_date,
+          #end_date      = end_date,
+          ddtm           = seq_ddtm(start_date,end_date,"1h"),
           fcst_model     = fcst_model,
           parameter = param,
           lead_time = lead_time,
