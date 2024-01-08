@@ -23,10 +23,10 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
 
   if (all(grepl("det_",scores_tables))){
     fcst_type <- "det"
-    model_names <- unique(verif$det_summary_scores$mname)
+    model_names <- unique(verif$det_summary_scores$fcst_model)
   } else if (any(grepl("ens_",scores_tables))){
     fcst_type <- "ens"
-    model_names <- unique(verif$ens_summary_scores$mname)
+    model_names <- unique(verif$ens_summary_scores$fcst_model)
   } else {
     stop("Input does not look like a harpPoint verification object, aborting")
   }
@@ -50,9 +50,9 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     
     # START OF SURFACE SCORES
     
-    # Scores as a fn of leadtime
+    # Scores as a fn of lead_time
     scores_lt  <- c("bias~rmse")
-    # Scores as a fn of validdate
+    # Scores as a fn of valid_dttm
     scores_vd  <- c("bias~stde") 
     # Scores as a fn of threshold
     scores_th  <- c("threat_score","false_alarm_rate","false_alarm_ratio","kuiper_skill_score",
@@ -64,11 +64,11 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     # Map scores (combining scores won't work here)
     scores_mp  <- c("bias","rmse")
     
-    # Leadtimes to plot when looking at scores_th
-    #tleadtimes <- c("24","48","All")
-    tleadtimes  <- c("All")
+    # lead_times to plot when looking at scores_th
+    #tlead_times <- c("24","48","All")
+    tlead_times  <- c("All")
     
-    # Cycles to consider when plotting (summary, threshold scores as fn of leadtime, theshold scores as fn of threshold)
+    # Cycles to consider when plotting (summary, threshold scores as fn of lead_time, theshold scores as fn of threshold)
     cycles_summary      <- c("00","12","All")
     cycles_threshold_lt <- c("All")
     cycles_threshold_th <- c("00","12","All")
@@ -76,7 +76,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     # END OF SURFACE SCORES
     
     # START OF UA SCORES
-    # Scores as a fn of leadtime
+    # Scores as a fn of lead_time
     p_scores_lt <- c("bias~rmse")
     
     # Profile scores
@@ -87,22 +87,22 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     # NB: What groups are considered? 
     # This controls what group to look for in the verif object and then do something sensible from there).
     # There are several options available (note that the "p_*" refers to UA plotting):
-    # 1) "leadtime", "validdate", "threshold", "p_leadtime" - Here the groups are used for the x-axis
+    # 1) "lead_time", "valid_dttm", "threshold", "p_lead_time" - Here the groups are used for the x-axis
     # 2) "SID" - For map scores
     # 3) "p_prof" - For UA profiles
     # 4) "other" - Some special ens scores which are handled by harp's plot_point_verif
     # In general one can leave xgroups as all of the above; if the data does not exist in the verif object,
     # it will simply be skipped
-    xgroups    <- c("leadtime","validdate","threshold","SID","p_leadtime","p_prof")
+    xgroups    <- c("lead_time","valid_dttm","threshold","SID","p_lead_time","p_prof")
 
     # EPS EXPERIMENT
   } else if (fcst_type == "ens"){
     
     # START OF SURFACE SCORES
     
-    # Ensemble scores as a fn of leadtime
+    # Ensemble scores as a fn of lead_time
     scores_lt  <- c("mean_bias~rmse","rmse~spread","crps","fair_crps")
-    # Ensemble scores as a fn of validdate
+    # Ensemble scores as a fn of valid_dttm
     scores_vd  <- c("mean_bias~stde")
     # Ensemble scores as a fn of thresholds
     scores_th  <- c("brier_score","brier_skill_score","fair_brier_score","roc_area")
@@ -127,11 +127,11 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
       scores_mp <- c(scores_mp,"ctrlbias","ctrlrmse")
     }
     
-    # Leadtimes to plot when looking at scores_th
-    #tleadtimes <- c(seq(12,48,12),"All")
-    tleadtimes <- c("All")
+    # lead_times to plot when looking at scores_th
+    #tlead_times <- c(seq(12,48,12),"All")
+    tlead_times <- c("All")
     
-    # Cycle to consider when plotting (summary, threshold scores as fn of leadtime, theshold scores as fn of threshold)
+    # Cycle to consider when plotting (summary, threshold scores as fn of lead_time, theshold scores as fn of threshold)
     cycles_summary      <- c("00","12","All")
     cycles_threshold_lt <- c("All")
     cycles_threshold_th <- c("00","12","All")
@@ -139,7 +139,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     # END OF SURFACE SCORES
     
     # START OF UA SCORES
-    # Scores as a fn of leadtime
+    # Scores as a fn of lead_time
     p_scores_lt <- c("mean_bias~rmse")
     
     # Profile scores
@@ -153,7 +153,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     # ENS OF UA SCORES
     
     # What groups are considered? (see descriptionin "det" section above) 
-    xgroups    <- c("leadtime","validdate","threshold","SID","other","p_leadtime","p_prof")
+    xgroups    <- c("lead_time","valid_dttm","threshold","SID","other","p_lead_time","p_prof")
 
   }
   
@@ -169,8 +169,11 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
   # Get useful attributes
   num_models   <- length(model_names)
   param        <- attr(verif,"parameter")
-  sdate        <- attr(verif,"start_date")
-  edate        <- attr(verif,"end_date")
+  sdate        <- attr(verif,"dttm")[1]
+  sdate        <- format(str_datetime_to_datetime(sdate),"%Y%m%d%H")
+  edate        <- attr(verif,"dttm")[length(attr(verif,"dttm"))]
+  edate        <- format(str_datetime_to_datetime(edate),"%Y%m%d%H")
+  
   # Note: The unit of the parameter is not included in the harp verif object by default (it seems?)
   # It should be manually added as an extra attribute upstream. If not, it will be set to empty
   par_unit     <- attr(verif,"unit") 
@@ -283,10 +286,10 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     c_ind = TRUE # Just a counter for printing
     
     # Define some options based on the x-axis
-    if (xgroup == "leadtime"){
+    if (xgroup == "lead_time"){
       xg_str <- "lt"
       scores <- scores_lt
-    } else if (xgroup == "validdate"){
+    } else if (xgroup == "valid_dttm"){
       xg_str <- "vd"
       scores <- scores_vd
     } else if (xgroup == "valid_hour"){
@@ -301,7 +304,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
     } else if (xgroup == "SID"){
       xg_str <- "mp"
       scores <- scores_mp
-    } else if (xgroup == "p_leadtime"){
+    } else if (xgroup == "p_lead_time"){
       xg_str <- "lt"
       scores <- p_scores_lt
     } else if (xgroup == "p_prof"){
@@ -354,7 +357,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
       verif      <- tmp_out$verif
       stations   <- tmp_out$stations
       cycles     <- tmp_out$cycles; cycles <- intersect(cycles,cycles_oi)
-      leadtimes  <- tmp_out$leadtimes; leadtime_vals <- intersect(tleadtimes,leadtimes)
+      lead_times  <- tmp_out$lead_times; lead_time_vals <- intersect(tlead_times,lead_times)
       validhours <- tmp_out$validhours
       station_group_var <- tmp_out$station_group_var
       rm(tmp_out)
@@ -392,21 +395,21 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
             # Plot
             if (c_typ == "threshold"){
               
-              # Here we are either plotting as a fn of leadtime or threshold
+              # Here we are either plotting as a fn of lead_time or threshold
               if (xgroup == "threshold"){
-                loop_values <- leadtime_vals; filter_col  <- "leadtime"
+                loop_values <- lead_time_vals; filter_col  <- "lead_time"
                 verif_III   <- verif_II
-              } else if (xgroup == "leadtime"){
+              } else if (xgroup == "lead_time"){
                 loop_values <- threshold_vals; filter_col  <- "threshold"
-                # Remove case where we have threshold scores over all leadtimes
-                verif_III   <- filter_list(verif_II,leadtime != "All") 
+                # Remove case where we have threshold scores over all lead_times
+                verif_III   <- filter_list(verif_II,lead_time != "All") 
               } 
               for (ii in loop_values){
                 verif_IIII  <- filter_list(verif_III,get(filter_col) == ii)
                 c_subtitle <- paste0(subtitle_str," : ",str_to_title(filter_col)," = ",ii)
                 if (xgroup == "threshold"){
                   vlt = ii; vth = "NA"
-                } else if (xgroup == "leadtime"){
+                } else if (xgroup == "lead_time"){
                   vlt = "NA"
                   if (ii < 0){
                     vth <- paste0("m",abs(ii))
@@ -461,17 +464,17 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
             if (score == "rank_histogram"){
               p_out <- fn_plot_point(verif_II,title_str,subtitle_str,fxoption_list,vroption_list)
             } else {
-              # Loop over all leadtime+threshold pairs
-              for (lt in leadtime_vals){
+              # Loop over all lead_time+threshold pairs
+              for (lt in lead_time_vals){
                 for (th in threshold_vals){
                   verif_III <- verif_II
-                  verif_III[[2]] <- filter(verif_III[[2]],leadtime == lt,threshold == th)
+                  verif_III[[2]] <- filter(verif_III[[2]],lead_time == lt,threshold == th)
                   if (th < 0){
                     vth <- paste0("m",abs(th))
                   } else {
                     vth <- th
                   }
-                  c_subtitle <- paste0(subtitle_str," : Leadtime = ",lt," : Threshold = ",th)
+                  c_subtitle <- paste0(subtitle_str," : lead_time = ",lt," : Threshold = ",th)
                   p_out <- fn_plot_point(verif_III,title_str,c_subtitle,fxoption_list,vroption_list,vlt=lt,vth=vth)
                 }
               }
@@ -535,16 +538,16 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
             } # if validhour exists 
               
           # UA scores
-          } else if ((xgroup %in% c("p_leadtime","p_prof")) & (all(strsplit(score,"~")[[1]] %in% cnames)) & ("p" %in% cnames)){
+          } else if ((xgroup %in% c("p_lead_time","p_prof")) & (all(strsplit(score,"~")[[1]] %in% cnames)) & ("p" %in% cnames)){
            
-            if ((xgroup == "p_leadtime") & ("leadtime" %in% cnames)){
+            if ((xgroup == "p_lead_time") & ("lead_time" %in% cnames)){
               
               if (c_ind){
                 print(paste0("Working on xgroup: ",xgroup))
                 c_ind = FALSE
               }
               
-              vroption_list$xgroup <- "leadtime"
+              vroption_list$xgroup <- "lead_time"
               
               # Get the available pressure levels
               p_levels <- unique(verif_II[[1]][["p"]])
@@ -570,7 +573,7 @@ fn_plot_point_verif <- function(harp_verif_input,png_archive,plot_num_cases = TR
 
               } # pressure levels
               
-            } # if p_leadtime
+            } # if p_lead_time
             
             if ((xgroup == "p_prof") & ("valid_hour" %in% cnames)){
               
@@ -643,11 +646,11 @@ fn_check_verif <- function(df,verif,dfnames){
     cycles <- c("All")
     verif <- verif %>% mutate_list(fcst_cycle = "All")
   }
-  # And check what leadtimes exist
-  if ("leadtime" %in% dfnames){
-    leadtimes <- unique(df[["leadtime"]])
+  # And check what lead_times exist
+  if ("lead_time" %in% dfnames){
+    lead_times <- unique(df[["lead_time"]])
   } else {
-    leadtimes <- "NA"
+    lead_times <- "NA"
   }
   # And check what validhours exist
   if ("valid_hour" %in% dfnames){
@@ -658,7 +661,7 @@ fn_check_verif <- function(df,verif,dfnames){
   return(list("verif" = verif,
               "cycles" = cycles,
               "stations" = stations,
-              "leadtimes" = leadtimes,
+              "lead_times" = lead_times,
               "validhours" = validhours,
               "station_group_var" = station_group_var))
 }
@@ -716,7 +719,7 @@ fn_plot_map <- function(verif,title_str,subtitle_str,fxoption_list,vroption_list
                           legend.position  = "right", 
                           strip.background = element_rect(fill="white"),
                           strip.text       = element_text(size=14))+
-                    facet_wrap(vars(mname),ncol=min(num_models,3))+
+                    facet_wrap(vars(fcst_model),ncol=min(num_models,3))+
                     scale_size_continuous(range = c(0.1, 3))+ # Controls the overall point size
                     labs(title = ptitle,subtitle = subtitle_str,fill = "",size = "")+
                     guides(size="none") # Remove size label from legend
@@ -758,11 +761,11 @@ fn_plot_profile <- function(verif,title_str,subtitle_str,plot_num_cases,fxoption
   
   # Note: No member plotting considered here 
   if (num_scores == 1){
-    p_out <- df %>% ggplot(aes(y=p,color=fct_inorder(mname)))+
+    p_out <- df %>% ggplot(aes(y=p,color=fct_inorder(fcst_model)))+
       geom_path(aes(x=get(all_scores)),size=line_size)+
       geom_point(aes(x=get(all_scores)),stroke=stroke_size,size=point_size)
   } else if (num_scores == 2){
-    p_out <- df %>% ggplot(aes(y=p,color=fct_inorder(mname)))+
+    p_out <- df %>% ggplot(aes(y=p,color=fct_inorder(fcst_model)))+
       geom_path(aes(x=get(all_scores[1]),linetype=title_scores[1]),size=line_size)+
       geom_point(aes(x=get(all_scores[1])),stroke=stroke_size,size=point_size)+
       geom_path(aes(x=get(all_scores[2]),linetype=title_scores[2]),size=line_size)+
@@ -788,7 +791,7 @@ fn_plot_profile <- function(verif,title_str,subtitle_str,plot_num_cases,fxoption
   if (plot_num_cases){
     ncy    <- "num_cases"
     ylabel <- "Num. cases"
-    p_nc <- df %>% ggplot(aes(y=p,color=fct_inorder(mname)))+
+    p_nc <- df %>% ggplot(aes(y=p,color=fct_inorder(fcst_model)))+
       geom_path(aes(x=get(ncy)),size=line_size)+
       geom_point(aes(x=get(ncy)),stroke=stroke_size,size=point_size)+
       labs(y = " ",x = ylabel,color = " ",shape = " ")+ptheme_nc+
@@ -833,11 +836,11 @@ fn_sid_issue_table <- function(df,fxoption_list,vroption_list,vlt="NA",vth="NA")
   png_archive <- fxoption_list$png_archive; sdate <- fxoption_list$sdate;
   edate <- fxoption_list$edate; param <- fxoption_list$param
   
-  mnames       <- unique(df[[1]][["mname"]])
+  fcst_models       <- unique(df[[1]][["fcst_model"]])
   num_stations <- unique(df[[1]][["SID"]])
-  stns_lrmse   <- df[[1]] %>% filter(mname == mnames[1]) %>% arrange(-rmse)
+  stns_lrmse   <- df[[1]] %>% filter(fcst_model == fcst_models[1]) %>% arrange(-rmse)
   ns_val       <- min(10,num_stations) # Info for 10 stations with largest rmse
-  stns_lrmse   <- stns_lrmse[1:ns_val,] %>% select("mname","valid_hour","fcst_cycle","SID","lat","lon","rmse","num_cases")
+  stns_lrmse   <- stns_lrmse[1:ns_val,] %>% select("fcst_model","valid_hour","fcst_cycle","SID","lat","lon","rmse","num_cases")
   stns_lrmse[["rmse"]] <- round(stns_lrmse[["rmse"]],2)
   
   # Get corresponding png name

@@ -35,8 +35,8 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
     df <- verif
   }
   
-  # A check on the type of xgroup (in case of character type for leadtime and validhour)
-  if ((xgroup %in% names(df)) & (is.character(df[[xgroup]])) & ((xgroup == "leadtime") || (xgroup == "valid_hour"))){
+  # A check on the type of xgroup (in case of character type for lead_time and validhour)
+  if ((xgroup %in% names(df)) & (is.character(df[[xgroup]])) & ((xgroup == "lead_time") || (xgroup == "valid_hour"))){
     df[[xgroup]] <- as.numeric(df[[xgroup]])
   }
   
@@ -49,8 +49,8 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
   # Plot title
   ptitle <- paste0(paste0(title_scores,collapse = ", ")," : ",title_str)
   
-  # Change point size if we are looking at validdate
-  if (xgroup == "validdate"){
+  # Change point size if we are looking at valid_dttm
+  if (xgroup == "valid_dttm"){
     stroke_size = 0; 
     point_size = 0
   }
@@ -61,9 +61,9 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
     models_tmp  <- names(mcolors)
     colours_tmp <- unname(mcolors)
     # Colour table
-    ctab <- data.frame(mname = models_tmp,colour = colours_tmp)
-    colnames(ctab) <- c("mname","colour")
-    plot_point_verif(verif,{{all_scores}}, rank_is_relative = "TRUE", rank_hist_type = "lollipop", colour_by = "mname",
+    ctab <- data.frame(fcst_model = models_tmp,colour = colours_tmp)
+    colnames(ctab) <- c("fcst_model","colour")
+    plot_point_verif(verif,{{all_scores}}, rank_is_relative = "TRUE", rank_hist_type = "lollipop", colour_by = "fcst_model",
                      colour_table = ctab, plot_title = ptitle, plot_subtitle = subtitle_str, legend_position = "top",
                      plot_caption = "none")
     # Save 
@@ -73,8 +73,8 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
     return(p_out)
   } else if (any(grepl("mbr",all_scores))){
     
-    # If looking at validdate, then use only one column
-    if (xgroup == "validdate"){
+    # If looking at valid_dttm, then use only one column
+    if (xgroup == "valid_dttm"){
       ncols = 1
     } else {
       ncols = min(num_models,2)
@@ -82,7 +82,7 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
     
     # Plot all members and facet by model name
     c_score <- gsub("mbr","",all_scores)
-    # If OBS exists as a mname, then add this in
+    # If OBS exists as a fcst_model, then add this in
     df_ctrl <- df %>% filter(member == "mbr000")
     # This deals with the case of dailyvar/timeseries
     if ("OBS" %in% unique(df[["member"]])){
@@ -91,20 +91,20 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
       df <- df %>% filter(!(member %in% c("mean","spread","OBS")))
       
       p_out <- ggplot()+
-        geom_path(data=df,aes(x=get(xgroup),y=get(c_score),group=interaction(mname,member)),
+        geom_path(data=df,aes(x=get(xgroup),y=get(c_score),group=interaction(fcst_model,member)),
                   alpha=0.5,size=line_size,color="gray")+
         geom_path(data=df_ctrl,aes(x=get(xgroup),y=get(c_score),color="mbr000"),size=line_size)+
         geom_path(data=df_mean,aes(x=get(xgroup),y=get(c_score),color="Mean"),size=line_size)+
         geom_path(data=df_obs,aes(x=get(xgroup),y=get(c_score),color="OBS"),size=line_size)+
-        facet_wrap(vars(mname),ncol=ncols)+
+        facet_wrap(vars(fcst_model),ncol=ncols)+
         labs(x = str_to_title(xgroup),y = par_unit,title=ptitle,subtitle=subtitle_str,color="")+ptheme_l
       
     } else {
       p_out <- ggplot()+
-          geom_path(data=df,aes(x=get(xgroup),y=get(c_score),group=interaction(mname,member)),
+          geom_path(data=df,aes(x=get(xgroup),y=get(c_score),group=interaction(fcst_model,member)),
                     alpha=0.5,size=line_size,color="gray")+
           geom_path(data=df_ctrl,aes(x=get(xgroup),y=get(c_score)),color="red",size=line_size)+
-          facet_wrap(vars(mname),ncol=ncols)+
+          facet_wrap(vars(fcst_model),ncol=ncols)+
           labs(x = str_to_title(xgroup),y = par_unit,title=ptitle,subtitle=subtitle_str)+ptheme_l
     }
       
@@ -118,14 +118,14 @@ fn_plot_point <- function(verif,title_str,subtitle_str,fxoption_list,vroption_li
     if (num_scores == 1){
       # Remove Inf/-Inf values which may appear for ens skill scores
       df <- df[!is.infinite(df[[all_scores]]),]
-      p_out <- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(mname)))+
+      p_out <- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(fcst_model)))+
         geom_line(aes(y=get(all_scores)),size=line_size)+
         geom_point(aes(y=get(all_scores)),stroke=stroke_size,size=point_size)
     } else if (num_scores == 2){
       # Remove Inf/-Inf values which may appear for ens skill scores
       df <- df[!is.infinite(df[[all_scores[1]]]),]
       df <- df[!is.infinite(df[[all_scores[2]]]),]
-      p_out <- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(mname)))+
+      p_out <- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(fcst_model)))+
         geom_line(aes(y=get(all_scores[1]),linetype=title_scores[1]),size=line_size)+
         geom_point(aes(y=get(all_scores[1])),stroke=stroke_size,size=point_size)+
         geom_line(aes(y=get(all_scores[2]),linetype=title_scores[2]),size=line_size)+
@@ -166,8 +166,8 @@ fn_plot_numcases <- function(verif,fxoption_list,vroption_list){
     df <- verif
   }
   
-  # A check on the type of xgroup (in case of character type for leadtime and validhour)
-  if ((xgroup %in% names(df)) & (is.character(df[[xgroup]])) & ((xgroup == "leadtime") || (xgroup == "valid_hour"))){
+  # A check on the type of xgroup (in case of character type for lead_time and validhour)
+  if ((xgroup %in% names(df)) & (is.character(df[[xgroup]])) & ((xgroup == "lead_time") || (xgroup == "valid_hour"))){
     df[[xgroup]] <- as.numeric(df[[xgroup]])
   }
   
@@ -182,7 +182,7 @@ fn_plot_numcases <- function(verif,fxoption_list,vroption_list){
     }
     ylabel <- "Num. cases obs."
   }
-  p_out<- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(mname)))+
+  p_out<- df %>% ggplot(aes(x=get(xgroup),color=fct_inorder(fcst_model)))+
     geom_line(aes(y=get(ncy)),size=line_size)+
     geom_point(aes(y=get(ncy)),stroke=stroke_size,size=point_size)+
     labs(x = " ",y = ylabel,color = " ",shape = " ")+ptheme_nc+

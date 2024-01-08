@@ -1,7 +1,7 @@
 #/bin/bash 
 
 ## load modules 
-module load R/4.0.4
+#module load R/4.0.4
 
 CONFIG_INITIAL=config_atos
  
