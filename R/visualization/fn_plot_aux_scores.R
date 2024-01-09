@@ -70,6 +70,7 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
   
   # Useful variables
   param    <- unique(fcst[["parameter"]])
+  if  (ifelse(length(grep('AccPcp', names(fcst),value=FALSE)) == 0, FALSE, TRUE) ){param <- grep('AccPcp', names(fcst),value=TRUE)}
   fcst     <- rename(fcst,"OBS"=all_of(param))
   cycles   <- sort(unique(fcst[["fcst_cycle"]]))
   stations <- unique(fcst[[station_group_var]])

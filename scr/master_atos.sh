@@ -12,14 +12,14 @@
 #source /home/sp3c/.bashrc
 set -x  
 export VERIF_DIR=/perm/sp3c/deode_verif/ #The location of your copy of DE_330's HARP point verification repo
-export CASE_STUDY=austria_2022
+export CASE_STUDY=Spain_202205
 
 cd $VERIF_DIR
 source config/config_atos.sh
 
 ########  
 export RUN_POINT_VERF=yes
-export RUN_POINT_VERF_LOCAL=yes
+export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
