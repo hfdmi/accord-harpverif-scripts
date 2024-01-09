@@ -11,22 +11,22 @@
 
 #source /home/sp3c/.bashrc
 set -x  
-export VERIF_DIR=/perm/sp3c/deode_verif/ #The location of your copy of DE_330's HARP point verification repo
+export VERIF_DIR=/perm/sp3c/harmonie_release/gitdeodeverif/DE_330-verif-scripts/ #The location of your copy of DE_330's HARP point verification repo
 export CASE_STUDY=Spain_202205
 
 cd $VERIF_DIR
 source config/config_atos.sh
 
 ########  
-export RUN_POINT_VERF=yes
-export RUN_POINT_VERF_LOCAL=no
+export RUN_POINT_VERF=no
+export RUN_POINT_VERF_LOCAL=yes
 export RUN_VOBS2SQL=no
 export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
 export SHOW_WEB_STATIC=no
 export SHOW_WEB_DYNAMIC=no
-export UPDATE_SHINYAPPSIO=yes
+export UPDATE_SHINYAPPSIO=no
 export SHINYAPPS_NUMBER=3
 export SHINY_PORT=3541 # Change this number if port is busy when launching web
 ######

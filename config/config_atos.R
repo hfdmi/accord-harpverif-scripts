@@ -66,7 +66,10 @@ conf_get_params_details <- function(){
         thresholds = S10m_thr      
     			),    			
          	RH2m  = list (
-        thresholds = RH2m_thr
+        thresholds = RH2m_thr,
+        scale_fcst = list(scaling = 0.0, new_units = "%", mult= FALSE),
+        scale_obs  = list(scaling = 0.0, new_units = "%", mult= FALSE)
+	
          ),   
                 Q2m  = list (
         thresholds = Q_thr

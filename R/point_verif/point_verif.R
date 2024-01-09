@@ -2,7 +2,7 @@
 
 # If you are using renv, uncomment these two lines:
 #print("Using renv. Loading environment")
-#renv::load("/home/nhd/R/harpUserScripts")
+#renv::load("/perm/sp3c/deode_verif")
 
 # Basic script to run point verification and generate the corresponding rds files
 
@@ -73,18 +73,15 @@ run_verif <- function(prm_info, prm_name) {
   
   # Read the forecast
   fcst <- read_point_forecast(
-    start_date    = start_date,
-    end_date      = end_date,
-    fcst_model    = fcst_model,
-    fcst_type     = fcst_type,
-    parameter     = prm_name,
-    lead_time     = lead_time,
-    lags          = lags,
-    by            = by_step,
-    file_path     = fcst_path,
-    vertical_coordinate = vertical_coordinate
-  )
-  
+         dttm=seq_dttm(start_date,end_date,by_step),
+         fcst_model    = fcst_model,
+         fcst_type     = fcst_type,
+         parameter     = prm_name,
+         lead_time     = lead_time,
+         lags          = lags,
+         file_path     = fcst_path,
+         vertical_coordinate = vertical_coordinate
+       )
   # Find the common cases - for upper air parmeters we need to ensure 
   # that the level column  is included in the check
   fcst <- switch(
@@ -95,13 +92,12 @@ run_verif <- function(prm_info, prm_name) {
   )
   # optional rescaling of forecasts using the scale_fcst part of the
   # params list. We use do.call to call the scale_point_forecast 
-  # function with a named list containing the arguments. 
+  # function with a named list containing the arguments. ##
   if (!is.null(prm_info$scale_fcst)) {
     fcst <- do.call(
       scale_param,list(fcst, prm_info$scale_obs$scaling, prm_info$scale_obs$new_units, prm_info$scale_obs$mult)
     )
   }
-  
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(

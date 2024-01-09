@@ -11,7 +11,7 @@ pre:
   by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
-  do_all: FALSE # if true, it will ignore list of parameters and do all that is available in the vfld files
+  do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
   params:
     - Pcp
     - AccPcp1h
@@ -41,6 +41,7 @@ pre:
     - DSN
     - SD
     - Q2m
+
 #Section to define paths for the verification
 # This section will be used by the scripts under verification
 verif:
@@ -53,14 +54,14 @@ verif:
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps
   grps: "lead_time"
-  fcst_path: "/perm/sp3c/deode_verif20/cases/Spain_202205d/FCTABLE"
-  obs_path: "/perm/sp3c/deode_verif20/cases/Spain_202205d/OBSTABLE"
-  verif_path: "/perm/sp3c/deode_verif20/cases/Spain_202205d/output/verif_results"
+  fcst_path: "/perm/sp3c/harmonie_release/gitdeodeverif/DE_330-verif-scripts/cases/Spain_202205/FCTABLE"
+  obs_path: "/perm/sp3c/harmonie_release/gitdeodeverif/DE_330-verif-scripts/cases/Spain_202205/OBSTABLE"
+  verif_path: "/perm/sp3c/harmonie_release/gitdeodeverif/DE_330-verif-scripts/cases/Spain_202205/output/verif_results"
 #Section to define the paths for the output
 # This section will be used by the plotting scripts
 post:
-  plot_output: "/perm/sp3c/deode_verif20/cases/Spain_202205d/output"
-  rds_path: "/perm/sp3c/deode_verif20/cases/Spain_202205d/verif_rds"
+  plot_output: "/perm/sp3c//harmonie_release/gitdeodeverif/DE_330-verif-scripts/cases/Spain_202205/output"
+  rds_path: "/perm/sp3c/deode_verif20/cases/Spain_202205/verif_rds"
 #This section if only for the scorecards
 scorecards:
   ref_model: AIB_46h1_de2
