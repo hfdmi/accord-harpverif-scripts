@@ -54,9 +54,7 @@ if (do_all) {
           output_file_opts =  sqlite_opts(path = fcst_path),
           return_data = TRUE
         )
-}
-else
-{
+} else {
     for (param in params)
     {
         cat("Processing ",param,"\n")

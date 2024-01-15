@@ -1,8 +1,8 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2022050100
-  end_date: 2022051023
+  start_date: 2021010100
+  end_date: 2021011023
   
 pre:
   fclen: 48
@@ -22,12 +22,12 @@ pre:
 verif:
   by_step: "12h"
   fcst_model:
-    - FC1
+    - testmodel
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps
   grps: "leadtime"
-  fcst_path: "/ec/res4/scratch/fnm/harpResults/FCTABLE"
-  obs_path: "/ec/res4/scratch/fnm/harpResults/OBSTABLE"
+  fcst_path: "/ec/res4/scratch/nhd/test_data_harp/FCTABLE"
+  obs_path: "/ec/res4/scratch/nhd/test_data_harp/OBSTABLE"
   verif_path: "/ec/res4/scratch/nhd/test_data_harp/output/verif_results"
 #Section to define the paths for the output
 # This section will be used by the plotting scripts
