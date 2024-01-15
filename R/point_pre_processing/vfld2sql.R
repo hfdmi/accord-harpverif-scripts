@@ -4,6 +4,8 @@ library(harp)
 library(argparse)
 library(here)
 ### 
+renv::load(getwd())
+
 source(Sys.getenv('CONFIG_R'))
 
 
@@ -41,11 +43,23 @@ lead_time_str <- CONFIG$verif$lead_time
 lead_time  <- eval(parse(text = lead_time_str))
 do_all <- CONFIG$pre$do_all
 
+
+#read_forecast(
+#  dttm                = seq_dttm(2022021200, 2022021300, "1d"),
+#  fcst_model          = "arome_arctic",
+#  parameter           = c("RH2m", "T2m"),
+#  lead_time           = seq(0, 24, 3),
+#  transformation      = "interpolate", 
+#  file_path           = here("data/netcdf"),
+#  file_template       = template,
+#  file_format_opts    = my_opts,
+#  output_file_opts    = sqlite_opts(path = file.path(tempdir(), "FCTABLE")) 
+#)
+
 if (do_all) {
    print("Processing ALL parameters in vfld files!")
         read_forecast(
-          start_date    = start_date,
-          end_date      = end_date,
+          dttm           = seq_dttm(start_date,end_date,"1h"),
           fcst_model     = fcst_model,
           parameter = NULL,
           lead_time = lead_time,
@@ -59,9 +73,7 @@ if (do_all) {
     {
         cat("Processing ",param,"\n")
         read_forecast(
-          #start_date    = start_date,
-          #end_date      = end_date,
-          ddtm           = seq_ddtm(start_date,end_date,"1h"),
+          dttm           = seq_dttm(start_date,end_date,"1h"),
           fcst_model     = fcst_model,
           parameter = param,
           lead_time = lead_time,

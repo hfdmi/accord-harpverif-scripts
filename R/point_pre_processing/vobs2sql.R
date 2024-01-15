@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Read vobs data and save it in sqlite format
-renv::load(getwd())
+# renv::load(getwd())
 
 library(harp)
 library(argparse)
@@ -42,11 +42,11 @@ lead_time  <- CONFIG$verif$lead_time
 
 cat("Collecting vobs data  from ",start_date," to ",end_date)
 
-obs_data <- read_obs_convert(
-  start_date  = start_date,
-  end_date    = end_date,
-  obs_path    = vobs_path,
-  sqlite_path = obs_path
-  )
+obs_data <- read_obs(
+  dttm           = seq_dttm(start_date,end_date,"1h"),
+  file_path    = vobs_path,
+   output_format_opts  = obstable_opts(
+    path = obs_path
+  ) )
 
 

@@ -2,12 +2,12 @@
 # This section will be used by the scripts under pre_processing
 shared:
   start_date: 2021010100
-  end_date: 2021011023
+  end_date: 2021010123
   
 pre:
   fclen: 48
   vfld_path: "/home/nhd/R/harpUserScripts/data/sample_data"
-  vobs_path: "/home/nhd/R/harpUserScripts/data/sample_data/vobs"
+  vobs_path: "/home/nhd/R/dev_accord/accord-verif-scripts/data/sample_data/vobs"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
   do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
