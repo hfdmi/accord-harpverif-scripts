@@ -43,13 +43,12 @@ fclen           <- CONFIG$pre$fclen
 
 
 cat("Collecting vobs data  from ",start_date," to ",end_date)
+cat("vobs path es",vobs_path)
 
-obs_data <- read_obs_convert(
-  start_date  = start_date,
-  end_date    = end_date+24 ,
-  by          = by_vobs_step,
-  obs_path    = vobs_path,
-  sqlite_path = obs_path
+obs_data <- read_obs(
+  dttm=seq_dates(start_date,end_date+24),
+  file_path    = vobs_path,
+  output_format_opts = obstable_opts(path=obs_path)
   )
 
 

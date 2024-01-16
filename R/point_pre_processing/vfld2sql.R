@@ -45,8 +45,7 @@ do_all <- CONFIG$pre$do_all
 if (do_all) {
    print("Processing ALL parameters in vfld files!")
         read_forecast(
-          start_date    = start_date,
-          end_date      = end_date,
+	  dttm = seq_dttm(start_date,end_date,by),	      
           fcst_model     = fcst_model,
           parameter = NULL,
           lead_time = lead_time,
@@ -55,17 +54,14 @@ if (do_all) {
           output_file_opts =  sqlite_opts(path = fcst_path),
           return_data = TRUE
         )
-}
-else
+} else
 {
     for (param in params)
     {
         cat("Processing ",param,"\n")
         read_forecast(
-          start_date    = start_date,
-          end_date      = end_date,
+          dttm = seq_dttm(start_date,end_date,by),
           fcst_model     = fcst_model,
-          by             = by,
           parameter = param,
           lead_time = lead_time,
           file_path = vfld_path,

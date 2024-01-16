@@ -48,7 +48,6 @@ params <- CONFIG$params_details
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)
 end_date   <- ifelse(is.null(args$end_date),CONFIG$shared$end_date,args$end_date)
 by_step    <- CONFIG$verif$by_step  #Read from config file
-by_obs_step    <- CONFIG$verif$by_obs_step  #Read from config file
 fcst_model <- CONFIG$verif$fcst_model
 lead_time_str <- CONFIG$verif$lead_time
 lead_time  <- eval(parse(text = lead_time_str))
@@ -148,7 +147,7 @@ run_verif <- function(prm_info, prm_name) {
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(
-    dttm=seq_dttm(start_date,end_date,by_obs_step),
+    dttm=unique_valid_dttm(fcst),
     parameter  = prm_name,
     obs_path   = obs_path,
     stations   = unique_stations(fcst),
@@ -181,8 +180,8 @@ run_verif <- function(prm_info, prm_name) {
   
   grps <- switch(
     vertical_coordinate,
-    "pressure" = map(grps, ~c(.x, "p")),
-    "height"   = map(grps, ~c(.x, "z")),
+    "pressure" = purrr::map(grps, ~c(.x, "p")),
+    "height"   = purrr::map(grps, ~c(.x, "z")),
     grps
   )
 

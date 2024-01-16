@@ -34,6 +34,14 @@ conf_get_params_details <- function(){
     Q_thr  <- c(seq(0, 0.15, 0.015))
     SD_thr <- c(0,1,3,6,10, seq(20, 80, 20))
     params <- list(
+                T = list(
+       scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
+       scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE),
+        vc         = "pressure"
+                        ),
+                RH2m  = list (
+        thresholds = RH2m_thr
+         ),		   
     		MAXT2m = list(
         thresholds = T2m_thr,
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
@@ -65,12 +73,6 @@ conf_get_params_details <- function(){
     	        Gmax = list(
         thresholds = S10m_thr      
     			),    			
-         	RH2m  = list (
-        thresholds = RH2m_thr,
-        scale_fcst = list(scaling = 0.0, new_units = "%", mult= FALSE),
-        scale_obs  = list(scaling = 0.0, new_units = "%", mult= FALSE)
-	
-         ),   
                 Q2m  = list (
         thresholds = Q_thr
          ),
@@ -78,7 +80,9 @@ conf_get_params_details <- function(){
         thresholds = RH2m_thr
          ),   
                   	CCtot  = list (
-        thresholds = RH2m_thr
+        thresholds = RH2m_thr,
+        scale_fcst = list(scaling = 12.5, new_units = "%", mult= TRUE),
+        scale_obs  = list(scaling = 12.5, new_units = "%", mult= TRUE)	
          ),   
                   	Cbase  = list (
         thresholds = Cbase_thr
@@ -95,11 +99,6 @@ conf_get_params_details <- function(){
                      DSN  = list (
         thresholds = SD_thr
          ),
-    		T = list(
-       scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
-       scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE),
-        vc         = "pressure"                 
-    			),
                 Pcp = list (
        thresholds = Pcp_thr
           ),
@@ -124,4 +123,8 @@ conf_get_params_details <- function(){
   
 }
 
+# scalings to be used in certain verifications
+# For CCtot, in Spain_202205, convert obs and fcst from octas to %
+#        scale_fcst = list(scaling = 20, new_units = "%", mult= TRUE),
+#        scale_obs  = list(scaling = 20, new_units = "%", mult= TRUE)
 

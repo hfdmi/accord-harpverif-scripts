@@ -5,7 +5,6 @@
 #renv::load("/perm/sp3c/deode_verif")
 
 # Basic script to run point verification and generate the corresponding rds files
-
 library(harp)
 library(purrr)
 library(argparse)
@@ -55,7 +54,6 @@ obs_path   <- CONFIG$verif$obs_path
 verif_path <- CONFIG$verif$verif_path
 grps       <- CONFIG$verif$grps
 
-
 # Some warnings in output
 # Warning from recycling prolly comes from
 # argument file_template. This does not change
@@ -101,7 +99,6 @@ run_verif <- function(prm_info, prm_name) {
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(
-    #dttm=seq_dttm(start_date,end_date,by_step),
     dttm=unique_valid_dttm(fcst),
     parameter  = prm_name,
     obs_path   = obs_path,

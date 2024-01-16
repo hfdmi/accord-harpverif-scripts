@@ -1,11 +1,11 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2022050200
+  start_date: 2022050212
   end_date: 2022050300
   
 pre:
-  fclen: 48
+  fclen: 48  # Maximum forecat length of vfld files to process
   vfld_path: "/ec/res4/scratch/sp3c/deode_verif/cases/Spain_202205/vfld/"
   vobs_path: "/ec/res4/scratch/sp3c/deode_verif/cases/Spain_202205/vobs/"
   by_vobs_step: "1h"
@@ -13,44 +13,20 @@ pre:
     - "vfld"
   do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
   params:
-    - Pcp
-    - AccPcp1h
-    - AccPcp3h
-    - AccPcp6h
-    - AccPcp12h
-    - AccPcp24h     
-    - S10m
     - T2m
     - RH2m
-    - Pmsl
     - T
-    - Cbase            
-    - CChigh         
-    - CClow      
-    - CCmed        
-    - CCtot         
-    - D10m   
-    - G10m    
-    - Gmax  
-    - Ps                                                                               
-    - Smax               
-    - Td2m                       
-    - Tmax                                           
-    - Tmin                                               
-    - vis                
-    - DSN
-    - SD
     - Q2m
 
 #Section to define paths for the verification
 # This section will be used by the scripts under verification
 verif:
-  by_step: "24h"
-  by_obs_step: "1h"
+  by_step: "6h" # Frequency of model runs available in FC*sqlites betweeen start_date and end_date
+  by_obs_step: "1h" #
   fcst_model:
-    - AIB_43h221_de
+    - AIB_46h1_de2
     - VAL500m_46h1_de2
-#    - M05B
+#    - M05C
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps
   grps: "lead_time"

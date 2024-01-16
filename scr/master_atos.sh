@@ -11,7 +11,7 @@
 
 #source /home/sp3c/.bashrc
 set -x  
-export VERIF_DIR=/perm/sp3c/harmonie_release/gitdeodeverif/DE_330-verif-scripts/ #The location of your copy of DE_330's HARP point verification repo
+export VERIF_DIR=/perm/sp3c/DE_330-verif-scripts/ #The location of your copy of DE_330's HARP point verification repo
 export CASE_STUDY=Spain_202205
 
 cd $VERIF_DIR
@@ -19,16 +19,14 @@ source config/config_atos.sh
 
 ########  
 export RUN_POINT_VERF=no
-export RUN_POINT_VERF_LOCAL=yes
+export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
-export SHOW_WEB_STATIC=no
+export SHOW_WEB_STATIC=yes
 export SHOW_WEB_DYNAMIC=no
-export UPDATE_SHINYAPPSIO=no
-export SHINYAPPS_NUMBER=3
-export SHINY_PORT=3541 # Change this number if port is busy when launching web
+export SHINY_PORT=3608 # Change this number if port is busy when launching web
 ######
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then 
@@ -55,8 +53,8 @@ fi
 if [ "$RUN_POINT_VERF_LOCAL" == "yes" ]; then 
    echo "Running complete graphic verification set"
    $RS_DIR/point_verif/point_verif_local.R   
-   mkdir -p $RS_DIR/../plot_point_verif_local${SHINYAPPS_NUMBER}/cases/$CASE_STUDY/
-   cp -R $RS_DIR/../cases/$CASE_STUDY/output/*/*.png $RS_DIR/../plot_point_verif_local${SHINYAPPS_NUMBER}/cases/$CASE_STUDY/
+   mkdir -p $RS_DIR/../plot_point_verif_local/cases/$CASE_STUDY/
+   cp -R $RS_DIR/../cases/$CASE_STUDY/output/*/*.png $RS_DIR/../plot_point_verif_local/cases/$CASE_STUDY/
 fi 
 
 if [ "$SCORECARDS" == "yes" ]; then 
@@ -70,8 +68,3 @@ fi
 if [ "$SHOW_WEB_DYNAMIC" == "yes" ]; then
         $RS_DIR/visualization/shiny_launch_dynamic.R
 fi
-
-if [ "$UPDATE_SHINYAPPSIO" == "yes" ]; then
-        $RS_DIR/visualization/update_shinyappsio.R
-fi
-
