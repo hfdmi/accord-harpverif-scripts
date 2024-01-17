@@ -8,7 +8,8 @@ library(here)
 server <- function(input, output, session) {
   
   # Get path to cases directory
-  basedir <- as.character(normalizePath(file.path(paste0(here(),'/cases/'))))
+  basedir <- as.character(normalizePath(file.path(paste0(here(),'/plot_point_verif_local/cases/'))))
+  
   # Get list of PNG files in cases directory (recursively)
   png_files <- list.files(path = file.path(basedir), pattern = "\\.png",recursive=TRUE)
   #Separate list elements into components with / and - separators

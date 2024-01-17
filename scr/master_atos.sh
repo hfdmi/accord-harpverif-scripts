@@ -19,14 +19,14 @@ source config/config_atos.sh
 
 ########  
 export RUN_POINT_VERF=no
-export RUN_POINT_VERF_LOCAL=no
+export RUN_POINT_VERF_LOCAL=yes
 export RUN_VOBS2SQL=no
 export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
-export SHOW_WEB_STATIC=yes
-export SHOW_WEB_DYNAMIC=no
-export SHINY_PORT=3608 # Change this number if port is busy when launching web
+export SHOW_WEB_STATIC=no
+export SHOW_WEB_DYNAMIC=yes
+export SHINY_PORT=3691 # Change this number if port is busy when launching web
 ######
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then 
