@@ -13,9 +13,10 @@
 # don't forget the vc = "pressure"
 
 library(yaml)
+#CONFIG <- yaml.load_file(Sys.getenv('CONFIG_YAML') )
 
 conf_get_config <- function(){  
-  CONFIG <- yaml.load_file(Sys.getenv('CONFIG_YAML') )
+  CONFIG <- yaml.load_file('/perm/sp3c/DE_330-verif-scripts/config/config_atos.yml_AQCE_201701')
   CONFIG$params_details = conf_get_params_details()
   CONFIG
 }
@@ -34,6 +35,14 @@ conf_get_params_details <- function(){
     Q_thr  <- c(seq(0, 0.15, 0.015))
     SD_thr <- c(0,1,3,6,10, seq(20, 80, 20))
     params <- list(
+      T2m = list(
+        thresholds = T2m_thr,
+        scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
+        scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
+      ),
+        Q2m  = list (
+        thresholds = Q_thr
+         ),
                 T = list(
        scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
        scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE),
@@ -52,6 +61,11 @@ conf_get_params_details <- function(){
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
         scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
                         ),		   
+                T2m = list(
+        thresholds = T2m_thr,
+        scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
+        scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
+                        ),		
    		Td2m = list(
         thresholds = T2m_thr,
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
@@ -123,8 +137,11 @@ conf_get_params_details <- function(){
   
 }
 
-# scalings to be used in certain verifications
+# scalings to be used in certain verifications:
 # For CCtot, in Spain_202205, convert obs and fcst from octas to %
-#        scale_fcst = list(scaling = 20, new_units = "%", mult= TRUE),
-#        scale_obs  = list(scaling = 20, new_units = "%", mult= TRUE)
+#                        CCtot  = list (
+#        thresholds = RH2m_thr,
+#        scale_fcst = list(scaling = 12.5, new_units = "%", mult= TRUE),
+#        scale_obs  = list(scaling = 12.5, new_units = "%", mult= TRUE)
+#         ),
 

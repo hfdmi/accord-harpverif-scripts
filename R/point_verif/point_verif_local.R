@@ -13,15 +13,19 @@ library(RColorBrewer) # Some colourmaps (some of which are colourblind friendly)
 library(gridExtra) # For grid arrange
 library(grid) # For grid arrange
 library(pracma) # For logseq
-library(boomer)
+#library(boomer)
 library(mapproj)
 
 ###
-source(Sys.getenv('CONFIG_R'))
-source(here("R/visualization/fn_plot_point_verif.R"))
-source(here("R/visualization/fn_plot_aux_scores.R"))
-source(here("R/visualization/fn_plot_helpers.R"))
-
+CONFIG_R='/perm/sp3c/DE_330-verif-scripts/config/config_atos.R'
+#source(Sys.getenv('CONFIG_R'))
+#source(here("R/visualization/fn_plot_point_verif.R"))
+#source(here("R/visualization/fn_plot_aux_scores.R"))
+#source(here("R/visualization/fn_plot_helpers.R"))
+source(CONFIG_R)
+source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_point_verif.R"))
+source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_aux_scores.R"))
+source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_helpers.R"))
 
 ###
 parser <- ArgumentParser()
@@ -166,11 +170,13 @@ run_verif <- function(prm_info, prm_name) {
   }
   
   # Join observations to the forecast
-  fcst <- join_to_fcst(fcst, obs)
+  fcst <- join_to_fcst(fcst, obs, force=TRUE)
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
-  # of standard deviations to use in the params list 
+  # of standard deviations to use in the params list
+  cat('here')
   fcst <- check_obs_against_fcst(fcst, {{prm_name}})
+  cat('after')
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly

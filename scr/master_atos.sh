@@ -12,21 +12,21 @@
 #source /home/sp3c/.bashrc
 set -x  
 export VERIF_DIR=/perm/sp3c/DE_330-verif-scripts/ #The location of your copy of DE_330's HARP point verification repo
-export CASE_STUDY=Spain_202205
+export CASE_STUDY=AQCE_201701
 
 cd $VERIF_DIR
 source config/config_atos.sh
 
 ########  
 export RUN_POINT_VERF=no
-export RUN_POINT_VERF_LOCAL=yes
+export RUN_POINT_VERF_LOCAL=no
 export RUN_VOBS2SQL=no
 export RUN_INTERPOL2SQL=no
 export RUN_VFLD2SQL=no
 export SCORECARDS=no
 export SHOW_WEB_STATIC=no
 export SHOW_WEB_DYNAMIC=yes
-export SHINY_PORT=3691 # Change this number if port is busy when launching web
+export SHINY_PORT=3699 # Change this number if port is busy when launching web
 ######
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then 

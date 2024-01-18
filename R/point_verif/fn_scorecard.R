@@ -6,14 +6,14 @@ scorecard_function <- function(
   end_date,
   by,
   fcst_model,
-  fcst_type,
+  fcst_type='det',
   fcst_path,
   obs_path,
   n,
   pooled_by,
   min_cases,
   stations,
-  groupings = "leadtime"
+  groupings = "lead_time"
 ) {
 
   # Output some information to the user
@@ -22,12 +22,10 @@ scorecard_function <- function(
   message("==============================", rep("=", nchar(param)), "\n")
 
   fcst <- read_point_forecast(
-    start_date = start_date,
-    end_date   = end_date,
+    dttm=seq_dttm(start_date,end_date,by),
     fcst_model = fcst_model,
     fcst_type  = fcst_type,
     parameter  = param,
-    by         = by,
     stations   = stations,
     file_path  = fcst_path
   )
@@ -37,13 +35,13 @@ scorecard_function <- function(
   stations <- pull_stations(fcst)
 
   obs <- read_point_obs(
-    start_date = first_validdate(fcst),
-    end_date   = last_validdate(fcst),
+    dttm=unique_valid_dttm(fcst),
     parameter  = param,
     obs_path   = obs_path,
-    stations   = stations
+    stations   = stations,
+    gross_error_check = FALSE
   )
-
+  
   # If no obervations were found return NULL
   if (nrow(obs) < 1) return(NULL)
   #This does an inner join of fcst and obs, so that only cases with matching f/o are retained
@@ -52,7 +50,7 @@ scorecard_function <- function(
   
  # verif_s10m <- det_verify(s10m, S10m, thresholds = seq(2.5, 12.5, 2.5))
   if (fcst_type == "det") {
-    #cat("Using det forecast option in scorecard_function \n")
+    cat("Using det forecast option in scorecard_function \n")
     bootstrap_verify(
        fcst,
        det_verify,
@@ -63,6 +61,7 @@ scorecard_function <- function(
        groupings = groupings)
        #parallel=TRUE)
   } else {
+    cat("Using not det forecast option in scorecard_function \n")
     pooled_bootstrap_score(
       fcst,
       ens_verify,
