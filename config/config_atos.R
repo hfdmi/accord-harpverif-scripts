@@ -13,10 +13,9 @@
 # don't forget the vc = "pressure"
 
 library(yaml)
-#CONFIG <- yaml.load_file(Sys.getenv('CONFIG_YAML') )
 
 conf_get_config <- function(){  
-  CONFIG <- yaml.load_file('/perm/sp3c/DE_330-verif-scripts/config/config_atos.yml_AQCE_201701')
+  CONFIG <- yaml.load_file(Sys.getenv('CONFIG_YAML') )
   CONFIG$params_details = conf_get_params_details()
   CONFIG
 }

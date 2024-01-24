@@ -34,25 +34,25 @@ conf_get_params_details <- function(){
     Q_thr  <- c(seq(0, 0.15, 0.015))
     SD_thr <- c(0,1,3,6,10, seq(20, 80, 20))
     params <- list(
-    		T2m = list(
+      T2m = list(
         thresholds = T2m_thr,
-        scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
-        scale_obs  = list(scale_factor = -273.15, new_units = "degC")       
+        scale_fcst = list(scaling = -273.15, new_units = "degC"),
+        scale_obs  = list(scaling = -273.15, new_units = "degC")       
     			),
    		Td2m = list(
         thresholds = T2m_thr,
-        scale_fcst = list(scale_factor = 0, new_units = "degC"),
-        scale_obs  = list(scale_factor = -273.15, new_units = "degC")       
+        scale_fcst = list(scaling = 0, new_units = "degC"),
+        scale_obs  = list(scaling = -273.15, new_units = "degC")       
     			),
     		Tmax = list(
         thresholds = Tmax_thr,
-        scale_fcst = list(scale_factor = 0, new_units = "degC"),
-       scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
+        scale_fcst = list(scaling = 0, new_units = "degC"),
+       scale_obs  = list(scaling = -273.15, new_units = "degC")        
     			),    
     	        Tmin = list(
         thresholds = Tmin_thr,
-        scale_fcst = list(scale_factor = 0, new_units = "degC"),
-        scale_obs  = list(scale_factor = -273.15, new_units = "degC")        
+        scale_fcst = list(scaling = 0, new_units = "degC"),
+        scale_obs  = list(scaling = -273.15, new_units = "degC")        
     			),    
     		S10m = list(
         thresholds = S10m_thr      
@@ -61,23 +61,23 @@ conf_get_params_details <- function(){
         thresholds = S10m_thr      
     			),    			
          	RH2m  = list (
-        scale_fcst = list(scale_factor = 100, new_units = "percent"),
+        scale_fcst = list(scaling = 100, new_units = "percent"),
         thresholds = RH2m_thr
          ),   
                 Q2m  = list (
-	scale_fcst = list(scale_factor = 0, new_units = "kg/kg"),
+	scale_fcst = list(scaling = 0, new_units = "kg/kg"),
         thresholds = Q_thr
          ),
                   	CClow  = list (
-        scale_fcst = list(scale_factor = 8, new_units = "oktas"),
+        scale_fcst = list(scaling = 8, new_units = "oktas"),
         thresholds = RH2m_thr
          ),   
                   	CCtot  = list (
-        scale_fcst = list(scale_factor = 8, new_units = "oktas"),
+        scale_fcst = list(scaling = 8, new_units = "oktas"),
         thresholds = RH2m_thr
          ),   
                   	Cbase  = list (
-        scale_fcst = list(scale_factor = 8, new_units = "oktas"),
+        scale_fcst = list(scaling = 8, new_units = "oktas"),
         thresholds = Cbase_thr
          ),   
                         Ps  = list (
@@ -93,8 +93,8 @@ conf_get_params_details <- function(){
         thresholds = SD_thr
          ),
     		T = list(
-       scale_fcst = list(scale_factor = -273.15, new_units = "degC"),
-        scale_obs  = list(scale_factor = -273.15, new_units = "degC"),
+       scale_fcst = list(scaling = -273.15, new_units = "degC"),
+        scale_obs  = list(scaling = -273.15, new_units = "degC"),
         vc         = "pressure"                 
     			),
                 Pcp = list (
