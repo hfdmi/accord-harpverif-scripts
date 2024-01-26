@@ -17,16 +17,10 @@ library(pracma) # For logseq
 library(mapproj)
 
 ###
-CONFIG_R='/perm/sp3c/DE_330-verif-scripts/config/config_atos.R'
-#source(Sys.getenv('CONFIG_R'))
-#source(here("R/visualization/fn_plot_point_verif.R"))
-#source(here("R/visualization/fn_plot_aux_scores.R"))
-#source(here("R/visualization/fn_plot_helpers.R"))
-source(CONFIG_R)
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_point_verif.R"))
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_aux_scores.R"))
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_helpers.R"))
-
+source(Sys.getenv('CONFIG_R'))
+source(here("R/visualization/fn_plot_point_verif.R"))
+source(here("R/visualization/fn_plot_aux_scores.R"))
+source(here("R/visualization/fn_plot_helpers.R"))
 ###
 parser <- ArgumentParser()
 
