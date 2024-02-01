@@ -47,6 +47,9 @@ conf_get_params_details <- function(){
        scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE),
         vc         = "pressure"
                         ),
+                RH = list(
+        vc         = "pressure"
+                        ),
                 RH2m  = list (
         thresholds = RH2m_thr
          ),		   

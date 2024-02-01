@@ -2,7 +2,7 @@
 # This section will be used by the scripts under pre_processing
 shared:
   start_date: 2022050212
-  end_date: 2022050300
+  end_date: 2022050312
   
 pre: 
   fclen: 48  # Maximum forecat length of vfld files to process
@@ -27,7 +27,8 @@ verif:
   fcst_model:
     - AIB_46h1_de2
     - VAL500m_46h1_de2
-    - M05C
+    - A_M05C
+    - HA_M05C
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps
   grps: "lead_time"
