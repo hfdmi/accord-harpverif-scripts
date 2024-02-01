@@ -16,9 +16,7 @@ library(here)
 # conf_det_scores.R
 
 ###
-#source(Sys.getenv('CONFIG_R'))
-CONFIG_R='/perm/sp3c/DE_330-verif-scripts/config/config_atos.R'
-source(CONFIG_R)
+source(Sys.getenv('CONFIG_R'))
 ###
 parser <- ArgumentParser()
 

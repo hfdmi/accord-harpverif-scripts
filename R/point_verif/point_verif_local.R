@@ -24,7 +24,7 @@ source(here("R/visualization/fn_plot_helpers.R"))
 
 ###
 parser <- ArgumentParser()
-  
+
 parser$add_argument("-start_date", type="character",
     default=NULL,
     help="First date to process [default %(default)s]",
@@ -37,6 +37,8 @@ parser$add_argument("-end_date", type="character",
 
 args <- parser$parse_args()	
 
+
+ 
 ###
 CONFIG <- conf_get_config()
 params <- CONFIG$params_details
@@ -110,7 +112,7 @@ run_verif <- function(prm_info, prm_name) {
   } else {
     vertical_coordinate <- NA_character_
   }
- 
+  
   # Read the forecast
   fcst <- read_point_forecast(
     dttm=seq_dttm(start_date,end_date,by_step),
@@ -167,7 +169,9 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list
-  fcst <- check_obs_against_fcst(fcst, prm_name)
+  cat('here')
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
+  cat('after')
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -223,6 +227,7 @@ run_verif <- function(prm_info, prm_name) {
   verif <- fn_verif_rename(verif)
   verif_toplot <- verif # Used for passing to plotting script (as it may be modified below)
   verif_toplot[[2]][["lead_time"]] <- as.character(verif_toplot[[2]][["lead_time"]]) # For plotting purposes
+
   
   # Do some additional verif depending on UA parameter
   if (!is.na(vertical_coordinate)){
