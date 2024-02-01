@@ -17,19 +17,14 @@ library(pracma) # For logseq
 library(mapproj)
 
 ###
-CONFIG_R='/perm/sp3c/DE_330-verif-scripts/config/config_atos.R'
-#source(Sys.getenv('CONFIG_R'))
-#source(here("R/visualization/fn_plot_point_verif.R"))
-#source(here("R/visualization/fn_plot_aux_scores.R"))
-#source(here("R/visualization/fn_plot_helpers.R"))
-source(CONFIG_R)
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_point_verif.R"))
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_aux_scores.R"))
-source(here("/perm/sp3c/DE_330-verif-scripts/R/visualization/fn_plot_helpers.R"))
+source(Sys.getenv('CONFIG_R'))
+source(here("R/visualization/fn_plot_point_verif.R"))
+source(here("R/visualization/fn_plot_aux_scores.R"))
+source(here("R/visualization/fn_plot_helpers.R"))
 
 ###
 parser <- ArgumentParser()
-
+  
 parser$add_argument("-start_date", type="character",
     default=NULL,
     help="First date to process [default %(default)s]",
@@ -42,8 +37,6 @@ parser$add_argument("-end_date", type="character",
 
 args <- parser$parse_args()	
 
-
- 
 ###
 CONFIG <- conf_get_config()
 params <- CONFIG$params_details
@@ -117,7 +110,7 @@ run_verif <- function(prm_info, prm_name) {
   } else {
     vertical_coordinate <- NA_character_
   }
-  
+ 
   # Read the forecast
   fcst <- read_point_forecast(
     dttm=seq_dttm(start_date,end_date,by_step),
@@ -174,9 +167,7 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list
-  cat('here')
-  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
-  cat('after')
+  fcst <- check_obs_against_fcst(fcst, prm_name)
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -232,7 +223,6 @@ run_verif <- function(prm_info, prm_name) {
   verif <- fn_verif_rename(verif)
   verif_toplot <- verif # Used for passing to plotting script (as it may be modified below)
   verif_toplot[[2]][["lead_time"]] <- as.character(verif_toplot[[2]][["lead_time"]]) # For plotting purposes
-
   
   # Do some additional verif depending on UA parameter
   if (!is.na(vertical_coordinate)){
@@ -313,7 +303,7 @@ run_verif <- function(prm_info, prm_name) {
 # if it fails for a parameter - it returns NULL if it fails. See
 # ?safely and ?quietly if you want to retain the errors.
 #possibly(run_verif, otherwise = NULL)
-possible_run_verif <- safely(run_verif, otherwise = NULL, quiet= FALSE)
+possible_run_verif <- possibly(run_verif, otherwise = "Error found", quiet=FALSE)
 #possible_run_verif <- run_verif
 #print(possible_run_verif)
 
@@ -321,7 +311,7 @@ possible_run_verif <- safely(run_verif, otherwise = NULL, quiet= FALSE)
 # to the possible_run_verif function. imap passes the element of the list
 # as the first argument and the name of the element as the second.
 verif <- imap(params, possible_run_verif)
-
+#verif <- imap(params, run_verif)
 # This will be addd in the visualization part
 # You can open the results in a shiny app using 
 # shiny_plot_point_verif(verif_path)

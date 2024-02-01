@@ -26,7 +26,7 @@ verif:
   by_obs_step: "1h" #
   fcst_model:
     - AIB_46h1_de2
-#    - VAL500m_46h1_de2
+    - VAL500m_46h1_de2
     - M05C
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps

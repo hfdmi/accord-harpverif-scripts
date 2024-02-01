@@ -34,7 +34,7 @@ conf_get_params_details <- function(){
     Q_thr  <- c(seq(0, 0.15, 0.015))
     SD_thr <- c(0,1,3,6,10, seq(20, 80, 20))
     params <- list(
-      T2m = list(
+        T2m = list(
         thresholds = T2m_thr,
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
         scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
@@ -60,11 +60,6 @@ conf_get_params_details <- function(){
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
         scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
                         ),		   
-                T2m = list(
-        thresholds = T2m_thr,
-        scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
-        scale_obs  = list(scaling = -273.15, new_units = "degC", mult= FALSE)
-                        ),		
    		Td2m = list(
         thresholds = T2m_thr,
         scale_fcst = list(scaling = -273.15, new_units = "degC", mult= FALSE),
@@ -86,13 +81,10 @@ conf_get_params_details <- function(){
     	        Gmax = list(
         thresholds = S10m_thr      
     			),    			
-                Q2m  = list (
-        thresholds = Q_thr
-         ),
-                  	CClow  = list (
+                CClow  = list (
         thresholds = RH2m_thr
          ),   
-                  	CCtot  = list (
+                CCtot  = list (
         thresholds = RH2m_thr,
         scale_fcst = list(scaling = 12.5, new_units = "%", mult= TRUE),
         scale_obs  = list(scaling = 12.5, new_units = "%", mult= TRUE)	

@@ -64,7 +64,7 @@ cat("Trying with param",param,"\n")
     if (length(matching_files) == 0) {
         cat("No existing files found, processing ",param, "in file template: ",template,"\n")
         read_forecast(
-          dttm = seq_dttm(start_date,end_date,by_step)
+          dttm = seq_dttm(start_date,end_date,by),
           fcst_model     = fcst_model,
           parameter = param,
           lead_time = lead_time,

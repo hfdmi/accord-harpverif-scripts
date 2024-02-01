@@ -1,8 +1,8 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2021081500
-  end_date: 2021081900
+  start_date: 2021081700
+  end_date: 2021081700
   
 pre:
   fclen: 48
@@ -12,6 +12,10 @@ pre:
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
   do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
+  model_output_path: "/perm/sp3c/DE_330-verif-scripts/cases/Gavle_2021/FCTABLE/"
+  fcst_templates:
+    - "{fcst_model}//fc{YYYY}{MM}{DD}{HH}.grib"
+  interp_method: "nearest"
   params:
     - Pcp
     - AccPcp1h
@@ -47,14 +51,13 @@ pre:
 verif:
   by_step: "6h"
   fcst_model:
-    - deode_cy46ref
-    - deode_cy46750
+    - DT
   lead_time: seq(0, 48, 1)
   fcst_type: "det" #det or eps
   grps: "leadtime"
-  fcst_path: "/perm/sp3c/deode_verif/cases/Gavle_2021/FCTABLE"
-  obs_path: "/perm/sp3c/deode_verif/cases/Gavle_2021/OBSTABLE"
-  verif_path: "/perm/sp3c/deode_verif/cases/Gavle_2021/output/verif_results"
+  fcst_path: "/perm/sp3c/DE_330-verif-scripts/cases/Gavle_2021/FCTABLE"
+  obs_path: "/perm/sp3c/DE_330-verif-scripts/cases/Gavle_2021/OBSTABLE"
+  verif_path: "/perm/sp3c/DE_330-verif-scripts/cases/Gavle_2021/output/verif_results"
 #Section to define the paths for the output
 # This section will be used by the plotting scripts
 post:
