@@ -73,8 +73,9 @@ run_verif <- function(prm_info, prm_name) {
   
   # Read the forecast
   fcst <- read_point_forecast(
-    start_date    = start_date,
-    end_date      = end_date,
+  dttm       = seq_dttm(start_date, end_date, by_step),
+    #start_date    = start_date,
+    #end_date      = end_date,
     fcst_model    = fcst_model,
     fcst_type     = fcst_type,
     parameter     = prm_name,
@@ -105,8 +106,9 @@ run_verif <- function(prm_info, prm_name) {
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(
-    start_date = first_validdate(fcst),
-    end_date   = last_validdate(fcst),
+  dttm       = unique_valid_dttm(fcst), 
+    #start_date = first_validdate(fcst),
+   # end_date   = last_validdate(fcst),
     parameter  = prm_name,
     obs_path   = obs_path,
     stations   = pull_stations(fcst),

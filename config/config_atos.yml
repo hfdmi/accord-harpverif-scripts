@@ -6,8 +6,8 @@ shared:
   
 pre:
   fclen: 48
-  vfld_path: "/home/nhd/R/harpUserScripts/data/sample_data"
-  vobs_path: "/home/nhd/R/dev_accord/accord-verif-scripts/data/sample_data/vobs"
+  vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld"
+  vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
   do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
