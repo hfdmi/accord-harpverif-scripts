@@ -2,10 +2,9 @@
 
 # If you are using renv, uncomment these two lines:
 #print("Using renv. Loading environment")
-#renv::load("/home/nhd/R/harpUserScripts")
+#renv::load("/perm/sp3c/deode_verif")
 
 # Basic script to run point verification and generate the corresponding rds files
-
 library(harp)
 library(purrr)
 library(argparse)
@@ -18,7 +17,6 @@ library(here)
 
 ###
 source(Sys.getenv('CONFIG_R'))
-
 ###
 parser <- ArgumentParser()
 
@@ -55,7 +53,6 @@ obs_path   <- CONFIG$verif$obs_path
 verif_path <- CONFIG$verif$verif_path
 grps       <- CONFIG$verif$grps
 
-
 # Some warnings in output
 # Warning from recycling prolly comes from
 # argument file_template. This does not change
@@ -73,19 +70,15 @@ run_verif <- function(prm_info, prm_name) {
   
   # Read the forecast
   fcst <- read_point_forecast(
-  dttm       = seq_dttm(start_date, end_date, by_step),
-    #start_date    = start_date,
-    #end_date      = end_date,
-    fcst_model    = fcst_model,
-    fcst_type     = fcst_type,
-    parameter     = prm_name,
-    lead_time     = lead_time,
-    lags          = lags,
-    by            = by_step,
-    file_path     = fcst_path,
-    vertical_coordinate = vertical_coordinate
-  )
-  
+         dttm=seq_dttm(start_date,end_date,by_step),
+         fcst_model    = fcst_model,
+         fcst_type     = fcst_type,
+         parameter     = prm_name,
+         lead_time     = lead_time,
+         lags          = lags,
+         file_path     = fcst_path,
+         vertical_coordinate = vertical_coordinate
+       )
   # Find the common cases - for upper air parmeters we need to ensure 
   # that the level column  is included in the check
   fcst <- switch(
@@ -96,42 +89,40 @@ run_verif <- function(prm_info, prm_name) {
   )
   # optional rescaling of forecasts using the scale_fcst part of the
   # params list. We use do.call to call the scale_point_forecast 
-  # function with a named list containing the arguments. 
+  # function with a named list containing the arguments. ##
   if (!is.null(prm_info$scale_fcst)) {
     fcst <- do.call(
-      scale_point_forecast, 
-      c(list(.fcst = fcst), prm_info$scale_fcst))
+      scale_param,list(fcst, prm_info$scale_obs$scaling, prm_info$scale_obs$new_units, prm_info$scale_obs$mult)
+    )
   }
-  
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(
-  dttm       = unique_valid_dttm(fcst), 
-    #start_date = first_validdate(fcst),
-   # end_date   = last_validdate(fcst),
+    dttm=unique_valid_dttm(fcst),
     parameter  = prm_name,
     obs_path   = obs_path,
-    stations   = pull_stations(fcst),
+    stations   = unique_stations(fcst),
     vertical_coordinate = vertical_coordinate
-  )
-  
+  )  
   # optional rescaling of observations using the scale_obs part of the
   # params list. We use do.call to call the scale_point_forecast 
   # function with a named list containing the arguments.
   if (!is.null(prm_info$scale_obs)) {
     obs <- do.call(
-      scale_point_obs, 
-      c(list(.obs = obs, parameter = prm_name), prm_info$scale_obs)
+      scale_param, list(obs, prm_info$scale_obs$scaling, prm_info$scale_obs$new_units, prm_info$scale_obs$mult, col = {{prm_name}})
     )
   }
   
   # Join observations to the forecast
-  fcst <- join_to_fcst(fcst, obs)
+  fcst <- join_to_fcst(fcst, obs, force=TRUE)
+  #Note by Samuel: Some stop clause is needed here if any of the models 
+  #intersects 0 with the observations' SIDS (then remove force=TRUE)
+
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
-  
+  fcst <- check_obs_against_fcst(fcst, prm_name)
+
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
   if (!is.list(grps)) {
@@ -164,10 +155,14 @@ run_verif <- function(prm_info, prm_name) {
   
 }
 
+print("Parameters to process:")
+print(params)
+
 # Use possibly from the purrr package to allow the script to continue
 # if it fails for a parameter - it returns NULL if it fails. See
 # ?safely and ?quietly if you want to retain the errors.
-possible_run_verif <- possibly(run_verif, otherwise = NULL)
+#possible_run_verif <- possibly(run_verif, otherwise = NULL)
+possible_run_verif <- safely(run_verif, otherwise = NULL, quiet= FALSE)
 print(possible_run_verif)
 
 # Use imap from the purrr package to map each element of the params list
@@ -175,7 +170,7 @@ print(possible_run_verif)
 # as the first argument and the name of the element as the second.
 verif <- imap(params, possible_run_verif)
 
-# This will be addd in the visualization part
+# This will be added in the visualization part
 # You can open the results in a shiny app using 
 # shiny_plot_point_verif(verif_path)
 

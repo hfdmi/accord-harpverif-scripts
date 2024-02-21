@@ -8,6 +8,7 @@ pre:
   fclen: 48
   vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld"
   vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs"
+  by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
   do_all: TRUE # if true, it will ignore list of parameters and do all that is available in the vfld files
@@ -17,6 +18,7 @@ pre:
     - RH2m
     - Pmsl
     - T
+
 #Section to define paths for the verification
 # This section will be used by the scripts under verification
 verif:
@@ -29,6 +31,7 @@ verif:
   fcst_path: "/ec/res4/scratch/nhd/test_data_harp/FCTABLE"
   obs_path: "/ec/res4/scratch/nhd/test_data_harp/OBSTABLE"
   verif_path: "/ec/res4/scratch/nhd/test_data_harp/output/verif_results"
+
 #Section to define the paths for the output
 # This section will be used by the plotting scripts
 post:
@@ -38,7 +41,7 @@ post:
 scorecards:
   ref_model: FC1
   fcst_model: FC2
-  params: 
+  params:
     - T2m
     - S10m
     - RH2m

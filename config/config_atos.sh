@@ -1,43 +1,37 @@
 #/bin/bash 
-
-
 ## load modules
 module load R
 
 
-#THESE TWO ARE NOT IN USE!
-#INI_DATE=2022050100
-#END_DATE=2022051523
-
-#
 CONFIG_INITIAL=config_atos
  
 #R Env
 USING_RENV=${USING_RENV-no}
 
+export VERIF_DIR=/home/nhd/R/dev_accord/accord-verif-scripts #The location of this repo
+export CASE_STUDY=Spain_202205
 
 # What to run
-RUN_POINT_VERF=${RUN_VERF-no}
-RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-no}
+export RUN_POINT_VERF=${RUN_VERF-no}
+export RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-no}
 
-SCORECARDS=${SCORECARDS-no}
-RUN_VOBS2SQL=${RUN_VOBS2SQL-yes}
-RUN_VFLD2SQL=${RUN_VFLD2SQL-yes}
+export SCORECARDS=${SCORECARDS-no}
+export RUN_VOBS2SQL=${RUN_VOBS2SQL-yes}
+export RUN_VFLD2SQL=${RUN_VFLD2SQL-yes}
+
+export SHOW_WEB_STATIC=no
+export SHOW_WEB_DYNAMIC=no
+export SHINY_PORT=3699 # Change this number if port is busy when launching web
 
 
 ## DNOT for USER
 MAIN_DIR=$(pwd)
 CONFIG_DIR=$MAIN_DIR/config
 RS_DIR=$MAIN_DIR/R
-CONFIG_YAML=$CONFIG_DIR/$CONFIG_INITIAL.yml
+CONFIG_YAML=$CONFIG_DIR/$CONFIG_INITIAL.yml_${CASE_STUDY}
 CONFIG_R=$CONFIG_DIR/$CONFIG_INITIAL.R
 
 ##
-#export INI_DATE END_DATE
 export MAIN_DIR CONFIG_INITIAL  
 export USING_RENV
-export RUN_POINT_VERF  RUN_VOBS2SQL RUN_VFLD2SQL
-export SCORECARDS
-
-
 export CONFIG_DIR RS_DIR CONFIG_YAML CONFIG_R

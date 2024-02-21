@@ -13,13 +13,14 @@ library(RColorBrewer) # Some colourmaps (some of which are colourblind friendly)
 library(gridExtra) # For grid arrange
 library(grid) # For grid arrange
 library(pracma) # For logseq
+#library(boomer)
+library(mapproj)
 
 ###
 source(Sys.getenv('CONFIG_R'))
 source(here("R/visualization/fn_plot_point_verif.R"))
 source(here("R/visualization/fn_plot_aux_scores.R"))
 source(here("R/visualization/fn_plot_helpers.R"))
-
 
 ###
 parser <- ArgumentParser()
@@ -57,8 +58,8 @@ verif_path <- CONFIG$verif$verif_path
 grps       <- CONFIG$verif$grps
 plot_output <- CONFIG$post$plot_output #  Load in png archive directory
 
-# Verif results by leadtime for each fcst_cycle (should be default choice?)
-grps <- list(c("leadtime","fcst_cycle"),"leadtime")
+# Verif results by lead_time for each fcst_cycle (should be default choice?)
+grps <- list(c("lead_time","fcst_cycle"),"lead_time")
 
 # Useful functions
 # This does some renaming of groups (those with NA or "00;12", etc.)
@@ -114,14 +115,12 @@ run_verif <- function(prm_info, prm_name) {
   
   # Read the forecast
   fcst <- read_point_forecast(
-    start_date    = start_date,
-    end_date      = end_date,
+    dttm=seq_dttm(start_date,end_date,by_step),
     fcst_model    = fcst_model,
     fcst_type     = fcst_type,
     parameter     = prm_name,
     lead_time     = lead_time,
     lags          = lags,
-    by            = by_step,
     file_path     = fcst_path,
     get_lat_and_lon = TRUE, # Useful when lat/lon missing from vobs files
     vertical_coordinate = vertical_coordinate
@@ -140,18 +139,17 @@ run_verif <- function(prm_info, prm_name) {
   # function with a named list containing the arguments. 
   if (!is.null(prm_info$scale_fcst)) {
     fcst <- do.call(
-      scale_point_forecast, 
-      c(list(.fcst = fcst), prm_info$scale_fcst))
+      scale_param,list(fcst, prm_info$scale_obs$scaling, prm_info$scale_obs$new_units, prm_info$scale_obs$mult)
+    )
   }
   
   # Read the observations getting the dates and stations from 
   # the forecast
   obs <- read_point_obs(
-    start_date = first_validdate(fcst),
-    end_date   = last_validdate(fcst),
+    dttm=unique_valid_dttm(fcst),
     parameter  = prm_name,
     obs_path   = obs_path,
-    stations   = pull_stations(fcst),
+    stations   = unique_stations(fcst),
     min_allowed = prm_info$obsmin_val, # If obsmin/max not set, reverts to default
     max_allowed = prm_info$obsmax_val,
     vertical_coordinate = vertical_coordinate
@@ -162,17 +160,16 @@ run_verif <- function(prm_info, prm_name) {
   # function with a named list containing the arguments.
   if (!is.null(prm_info$scale_obs)) {
     obs <- do.call(
-      scale_point_obs, 
-      c(list(.obs = obs, parameter = prm_name), prm_info$scale_obs)
+      scale_param, list(obs, prm_info$scale_obs$scaling, prm_info$scale_obs$new_units, prm_info$scale_obs$mult, col = {{prm_name}})
     )
   }
   
   # Join observations to the forecast
-  fcst <- join_to_fcst(fcst, obs)
+  fcst <- join_to_fcst(fcst, obs, force=TRUE)
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
-  # of standard deviations to use in the params list 
-  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
+  # of standard deviations to use in the params list
+  fcst <- check_obs_against_fcst(fcst, prm_name)
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -182,14 +179,15 @@ run_verif <- function(prm_info, prm_name) {
   
   grps <- switch(
     vertical_coordinate,
-    "pressure" = map(grps, ~c(.x, "p")),
-    "height"   = map(grps, ~c(.x, "z")),
+    "pressure" = purrr::map(grps, ~c(.x, "p")),
+    "height"   = purrr::map(grps, ~c(.x, "z")),
     grps
   )
 
   # add valid_hour to fcst
-  #fcst <- mutate_list(fcst,valid_hour=substr(YMDh(validdate),9,10))
-  fcst <- expand_date(fcst,validdate) # Add in valid_year, valid_month, valid_day, valid_hour
+  #fcst <- mutate_list(fcst,valid_hour=substr(YMDh(valid_dttm),9,10))
+  fcst <- expand_date(fcst,valid_dttm) # Add in valid_year, valid_month, valid_day, valid_hour
+  #fcst <- rig(expand_date)(fcst,valid_dttm) # Add in valid_year, valid_month, valid_day, valid_hour  
   fcst <- mutate_list(fcst,valid_hour = sprintf("%02d",valid_hour)) # Convert to character and pad
   # Remove stations that only occur very infrequently (for surface variables only)
   if (is.na(vertical_coordinate)){
@@ -226,28 +224,29 @@ run_verif <- function(prm_info, prm_name) {
   )
   verif <- fn_verif_rename(verif)
   verif_toplot <- verif # Used for passing to plotting script (as it may be modified below)
-  verif_toplot[[2]][["leadtime"]] <- as.character(verif_toplot[[2]][["leadtime"]]) # For plotting purposes
+  verif_toplot[[2]][["lead_time"]] <- as.character(verif_toplot[[2]][["lead_time"]]) # For plotting purposes
+
   
   # Do some additional verif depending on UA parameter
   if (!is.na(vertical_coordinate)){
     # Group by valid_hour for profiles (threshold scores not required)
-    grps_vh  <- lapply(grps_c,function(x) gsub("leadtime","valid_hour",x))
+    grps_vh  <- lapply(grps_c,function(x) gsub("lead_time","valid_hour",x))
     verif_vh <-  get(verif_fn)(
       fcst, prm_name, thresholds = NULL, groupings = grps_vh
     )
     verif_vh <- fn_verif_rename(verif_vh)
       
   } else {
-    # Compute scores as a function of validdate (should take the same format as default leadtime groups)
+    # Compute scores as a function of valid_dttm (should take the same format as default lead_time groups)
     # Assuming threshold scores are not required
-    grps_vd  <- lapply(grps_c,function(x) gsub("leadtime","validdate",x))
+    grps_vd  <- lapply(grps_c,function(x) gsub("lead_time","valid_dttm",x))
     verif_vd <- get(verif_fn)(
       fcst, prm_name, thresholds = NULL, groupings = grps_vd
     )
     verif_vd <- fn_verif_rename(verif_vd)
-
+   
     # Compute scores for each station for map purposes
-    grps_sid  <- lapply(grps_c,function(x) gsub("leadtime","SID",x))
+    grps_sid  <- lapply(grps_c,function(x) gsub("lead_time","SID",x))
     # Replace fcst_cycle by valid_hour
     if ("fcst_cycle" %in% grps_sid[[1]]){
       grps_sid  <- lapply(grps_sid,function(x) gsub("fcst_cycle","valid_hour",x))
@@ -263,12 +262,12 @@ run_verif <- function(prm_info, prm_name) {
     verif_sid <- fn_verif_rename(verif_sid)
     # Need to add lat/lon to the SIDs
     verif_sid <- fn_sid_latlon(verif_sid,fcst)
-  
-    # Flag to compute the standard threshold scores over all leadtimes and add
+    
+    # Flag to compute the standard threshold scores over all lead_times and add
     alllt_thresholds <- TRUE
     if (alllt_thresholds){
-      #  Compute threshold scores over all leadtimes (as done in Monitor) (retain default group structure)
-      grps_nolt <- lapply(grps_c,function(x) x[x != "leadtime"])
+      #  Compute threshold scores over all lead_times (as done in Monitor) (retain default group structure)
+      grps_nolt <- lapply(grps_c,function(x) x[x != "lead_time"])
       grps_nolt <- grps_nolt[lapply(grps_nolt,length)>0] 
       # Note: This will remove character(0) entries but will miss the "All" option for fcst_cycle etc.
       # Hence we add a NULL below (NB: this may not be required with updated version of harp)
@@ -277,10 +276,10 @@ run_verif <- function(prm_info, prm_name) {
         fcst, prm_name, thresholds = prm_info$thresholds, groupings = grps_nolt
       )
       verif_alllt <- fn_verif_rename(verif_alllt)
-      # Add in indication that we use all leadtimes (important for plotting script and for binding below)
-      verif_alllt <- mutate_list(verif_alllt,leadtime = "All") 
+      # Add in indication that we use all lead_times (important for plotting script and for binding below)
+      verif_alllt <- mutate_list(verif_alllt,lead_time = "All") 
       
-      print("Adding threshold scores over all leadtimes")
+      print("Adding threshold scores over all lead_times")
       # Bind rows will match the column names
       verif_toplot[[2]] <- bind_rows(verif_toplot[[2]],verif_alllt[[2]])
     }
@@ -306,15 +305,16 @@ run_verif <- function(prm_info, prm_name) {
 # Use possibly from the purrr package to allow the script to continue
 # if it fails for a parameter - it returns NULL if it fails. See
 # ?safely and ?quietly if you want to retain the errors.
-#possible_run_verif <- possibly(run_verif, otherwise = NULL)
-possible_run_verif <- run_verif
+#possibly(run_verif, otherwise = NULL)
+possible_run_verif <- possibly(run_verif, otherwise = "Error found", quiet=FALSE)
+#possible_run_verif <- run_verif
 #print(possible_run_verif)
 
 # Use imap from the purrr package to map each element of the params list
 # to the possible_run_verif function. imap passes the element of the list
 # as the first argument and the name of the element as the second.
 verif <- imap(params, possible_run_verif)
-
+#verif <- imap(params, run_verif)
 # This will be addd in the visualization part
 # You can open the results in a shiny app using 
 # shiny_plot_point_verif(verif_path)

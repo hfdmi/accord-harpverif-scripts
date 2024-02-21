@@ -8,9 +8,13 @@ library(here)
 
 
 ###
-source(Sys.getenv('CONFIG_R'))
+#source(Sys.getenv('CONFIG_R'))
 #Function to do the whole calculation
-source(here("R","point_verif","fn_scorecard.R"))
+CONFIG_R='/perm/sp3c/DE_330-verif-scripts/config/config_atos.R'
+source(CONFIG_R)
+#source(here("R","point_verif","fn_scorecard.R"))
+source('/perm/sp3c/DE_330-verif-scripts/R/point_verif/fn_scorecard.R')
+#source('/perm/sp3c/DE_330-verif-scripts/R/point_verif/read_point_obs.R')
 
 ###
 parser <- ArgumentParser()
@@ -74,7 +78,7 @@ selected_stations <- NULL #default
 # Calculation starts here
 
 #Function to do the whole calculation
-source(here("R/point_verif/fn_scorecard.R"))
+#source(here("R/point_verif/fn_scorecard.R"))
 
 # Calculation starts here
 

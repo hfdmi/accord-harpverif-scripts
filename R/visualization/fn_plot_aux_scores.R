@@ -37,15 +37,15 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
   if (fcst_type == "ens"){
     # Add in ensemble mean and spread
     fcst <- ens_stats(fcst_input)
-    fcst <- bind_fcst(fcst) # Can take a while
+    fcst <- bind(fcst) # Can take a while
     fcst_names <- names(fcst)
-    # TODO: Check in latest version of harp if the same behaviour occurs. When you bind_fcst after using ens_stats,
+    # TODO: Check in latest version of harp if the same behaviour occurs. When you bind() after using ens_stats,
     # the mean and spread are added on as columns ens_mean/spread (these repeat for each member). Thus do some manipulation here
     # to add the mean/spread to the "member" column to tidy things up 
     # TODO: Possibly this is not recommended...may have to revisit
     df_meanspread <- NULL
     for (c_model in models_vec){
-      df_tmp    <- fcst %>% filter(mname == c_model); members_tmp <- unique(df_tmp[["member"]])
+      df_tmp    <- fcst %>% filter(fcst_model == c_model); members_tmp <- unique(df_tmp[["member"]])
       df_tmp    <- df_tmp %>% filter(member == members_tmp[1])
       df_mean   <- df_tmp %>% mutate(member = "mean",forecast = ens_mean)
       df_spread <- df_tmp %>% mutate(member = "spread",forecast = ens_spread)
@@ -54,14 +54,14 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
     fcst <- bind_rows(fcst,df_meanspread); fcst <- select(fcst,-ens_mean,-ens_spread)
     rm(df_tmp,members_tmp,df_mean,df_spread,df_meanspread)
   } else if (fcst_type == "det"){
-    fcst <- bind_fcst(fcst_input) 
+    fcst <- bind(fcst_input) 
     fcst_names <- names(fcst)
   }
 
   # Add in validhour and station group if they do not exist
   if (!("valid_hour" %in% fcst_names)){
-    #fcst <- mutate(fcst,validhour=substr(YMDh(validdate),9,10))
-    fcst <- expand_date(fcst,validdate)
+    #fcst <- mutate(fcst,validhour=substr(YMDh(valid_dttm),9,10))
+    fcst <- expand_date(fcst,valid_dttm)
     fcst <- mutate_list(fcst,valid_hour = sprintf("%02d",valid_hour))
   }
   if (!(station_group_var %in% fcst_names)){
@@ -75,8 +75,8 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
   cycles   <- sort(unique(fcst[["fcst_cycle"]]))
   stations <- unique(fcst[[station_group_var]])
   par_unit <- unique(fcst[["units"]])
-  sdate    <- YMDh(first(sort(unique(fcst[["fcdate"]]))))
-  edate    <- YMDh(last(sort(unique(fcst[["fcdate"]]))))
+  sdate    <- YMDh(first(sort(unique(fcst[["fcst_dttm"]]))))
+  edate    <- YMDh(last(sort(unique(fcst[["fcst_dttm"]]))))
   
   # Check if the png_archive points to sdate-edate? If not, create a subdirectory
   d_end <- paste0(sdate,"-",edate)
@@ -89,7 +89,7 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
   # USER INTERACTION
   #=================================================#
   
-  lt_to_use   <- seq(3,48,3) # What leadtimes to use?
+  lt_to_use   <- seq(3,48,3) # What lead_times to use?
   cycles_oi   <- c("All") # What cycles to plot for?
   stations_oi <- unique(c(stations,"All")) # What stations to plot for?
   fd_adjust   <- 1  # Adjust parameter in freq dist plotting
@@ -165,13 +165,13 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
   # COMPUTE VARIOUS AUX SCORES
   #=================================================#
   
-  fcst      <- filter(fcst,leadtime %in% lt_to_use)
-  leadtimes <- sort(unique(fcst[["leadtime"]]))
+  fcst      <- filter(fcst,lead_time %in% lt_to_use)
+  lead_times <- sort(unique(fcst[["lead_time"]]))
   
-  if (length(leadtimes)>5){
-    lt_used_fig <- c(leadtimes[1],leadtimes[2],"... ",leadtimes[length(leadtimes)])
+  if (length(lead_times)>5){
+    lt_used_fig <- c(lead_times[1],lead_times[2],"... ",lead_times[length(lead_times)])
   } else {
-    lt_used_fig <- leadtimes
+    lt_used_fig <- lead_times
   }
   
   for (cycle in cycles_oi){
@@ -220,12 +220,12 @@ fn_plot_aux_scores <- function(fcst_input,png_archive,station_group_var = "stati
         
         # Member scores (not really required)
         if (mbr_plots){
-          group_vars <- c("mname","valid_hour","member")
+          group_vars <- c("fcst_model","valid_hour","member")
           vroption_list$score <- "mbrdailyvar"; vroption_list$xgroup <- "valid_hour"; vroption_list$xg_str <- "vh"
           fn_dvar_ts(cc_fcst,group_vars,title_str,subtitle_str,fxoption_list,vroption_list)
           
-          group_vars <- c("mname","validdate","member")
-          vroption_list$score <- "mbrtimeseries"; vroption_list$xgroup <- "validdate"; vroption_list$xg_str <- "vd"
+          group_vars <- c("fcst_model","valid_dttm","member")
+          vroption_list$score <- "mbrtimeseries"; vroption_list$xgroup <- "valid_dttm"; vroption_list$xg_str <- "vd"
           fn_dvar_ts(cc_fcst,group_vars,title_str,subtitle_str,fxoption_list,vroption_list)
           
           vroption_list$xgroup <- "NA"; vroption_list$score <- "mbrfreqdist"; vroption_list$xg_str <- "NA";
@@ -256,13 +256,13 @@ fn_aux <- function(fc,title_str,subtitle_str,fxoption_list,vroption_list){
   }
   
   # Daily Var 
-  group_vars <- c("mname","valid_hour")
+  group_vars <- c("fcst_model","valid_hour")
   vroption_list$xgroup <- "valid_hour"; vroption_list$score <- paste0(cprefix,"dailyvar"); vroption_list$xg_str <- "vh"
   fn_dvar_ts(fc,group_vars,title_str,subtitle_str,fxoption_list,vroption_list)
   
   # Timeseries 
-  group_vars <- c("mname","validdate")
-  vroption_list$xgroup <- "validdate"; vroption_list$score <- paste0(cprefix,"timeseries"); vroption_list$xg_str <- "vd"
+  group_vars <- c("fcst_model","valid_dttm")
+  vroption_list$xgroup <- "valid_dttm"; vroption_list$score <- paste0(cprefix,"timeseries"); vroption_list$xg_str <- "vd"
   fn_dvar_ts(fc,group_vars,title_str,subtitle_str,fxoption_list,vroption_list)
   
   # Frequency distribution 
@@ -292,15 +292,15 @@ fn_dvar_ts <- function(fc,group_vars,title_str,subtitle_str,fxoption_list,vropti
     vroption_list$score <- score
   }
   
-  dv <- fc %>% group_by_at(group_vars) %>% summarise(!!score := mean(forecast), mean_obs = mean(OBS),num_cases=n())
+  dv <- fc %>% group_by_at(group_vars) %>% summarise(!!score := mean(fcst), mean_obs = mean(OBS),num_cases=n())
   
-  # Replace mean_obs by "OBS" in mname (or member)
+  # Replace mean_obs by "OBS" in fcst_model (or member)
   if (grepl("mbr",score_orig)){
     dv_tmp <- filter(dv,member == unique(dv[["member"]][1]))
     dv_tmp <- mutate(dv_tmp,member = "OBS","{score}" := mean_obs)
   } else {
-    dv_tmp <- filter(dv,mname == unique(dv[["mname"]])[1])
-    dv_tmp <- mutate(dv_tmp,mname = "OBS","{score}" := mean_obs)
+    dv_tmp <- filter(dv,fcst_model == unique(dv[["fcst_model"]])[1])
+    dv_tmp <- mutate(dv_tmp,fcst_model = "OBS","{score}" := mean_obs)
   }
   dv <- bind_rows(dv,dv_tmp); dv <- select(dv,-mean_obs)
 
@@ -336,23 +336,23 @@ fn_freqdist <- function(fc,title_str,subtitle_str,fxoption_list,vroption_list){
     fc      <- fc %>% filter(!(member %in% c("mean","spread","OBS")))
     
     p_out <- ggplot()+
-      geom_density(data=fc,aes(x=forecast,group=interaction(mname,member)),color="gray",
+      geom_density(data=fc,aes(x=fcst,group=interaction(fcst_model,member)),color="gray",
                    size=fxoption_list$line_size,adjust=fxoption_list$fd_adjust,alpha=0.5)+
-      geom_density(data=fc_ctrl,aes(x=forecast,group=mname,color="mbr000"),
+      geom_density(data=fc_ctrl,aes(x=fcst,group=fcst_model,color="mbr000"),
                    size=fxoption_list$line_size,adjust=fxoption_list$fd_adjust,alpha=0.5)+
-      geom_density(data=fc_mean,aes(x=forecast,group=mname,color="mean"),
+      geom_density(data=fc_mean,aes(x=fcst,group=fcst_model,color="mean"),
                    size=fxoption_list$line_size,adjust=fxoption_list$fd_adjust,alpha=0.5)+
-      geom_density(data=fc_obs,aes(x=forecast,group=mname,color="OBS"),
+      geom_density(data=fc_obs,aes(x=fcst,group=fcst_model,color="OBS"),
                    size=fxoption_list$line_size,adjust=fxoption_list$fd_adjust,alpha=0.5)+
-      facet_wrap(vars(mname),ncol=min(fxoption_list$num_models,2))+
+      facet_wrap(vars(fcst_model),ncol=min(fxoption_list$num_models,2))+
       labs(x = fxoption_list$par_unit, y = "Relative frequency",color = "",
            title=ptitle,subtitle = subtitle_str)+fxoption_list$ptheme_l
     
   } else {
-    fc_obs <- fc %>% filter(mname == unique(fc[["mname"]][1]))
+    fc_obs <- fc %>% filter(fcst_model == unique(fc[["fcst_model"]][1]))
   
     p_out <- ggplot()+
-      geom_density(data=fc,aes(x=forecast,color=fct_inorder(mname)),size=fxoption_list$line_size,
+      geom_density(data=fc,aes(x=fcst,color=fct_inorder(fcst_model)),size=fxoption_list$line_size,
                    adjust=fxoption_list$fd_adjust)+
       geom_density(data=fc_obs,aes(x=OBS,color="OBS"),size=fxoption_list$line_size,
                    adjust=fxoption_list$fd_adjust)+
@@ -385,9 +385,9 @@ fn_scatterplot <- function(fc,title_str,subtitle_str,fxoption_list,vroption_list
   title_scores <- gsub("_"," ",str_to_title(title_scores))
   ptitle <- paste0(paste0(title_scores,collapse = ", ")," : ",title_str)
   
-  p_scat <- fc %>% ggplot(aes(x=OBS,y=forecast))+
+  p_scat <- fc %>% ggplot(aes(x=OBS,y=fcst))+
     geom_hex(bins=fxoption_list$scat_bins)+
-    facet_wrap(vars((mname)),ncol=min(fxoption_list$num_models,3))
+    facet_wrap(vars((fcst_model)),ncol=min(fxoption_list$num_models,3))
   max_count <- max(ggplot_build(p_scat)$data[[1]]$count)
   br1 <- round(logseq(1,max_count,5),0)
   p_scat <- p_scat +
