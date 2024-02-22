@@ -38,7 +38,6 @@ args <- parser$parse_args()
 CONFIG <- conf_get_config()
 params <- CONFIG$params_details
 
-
 ###
 start_date <- ifelse(is.null(args$start_date),CONFIG$shared$start_date,args$start_date)
 end_date   <- ifelse(is.null(args$end_date),CONFIG$shared$end_date,args$end_date)
@@ -121,7 +120,7 @@ run_verif <- function(prm_info, prm_name) {
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list 
-  fcst <- check_obs_against_fcst(fcst, prm_name)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
 
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -143,7 +142,7 @@ run_verif <- function(prm_info, prm_name) {
     )
   } else {
     verif <- det_verify(
-      fcst, prm_name, thresholds = prm_info$thresholds, groupings = grps
+      fcst, {{prm_name}}, thresholds = prm_info$thresholds, groupings = grps
     )
   }
   
@@ -163,7 +162,7 @@ print(params)
 # ?safely and ?quietly if you want to retain the errors.
 #possible_run_verif <- possibly(run_verif, otherwise = NULL)
 possible_run_verif <- safely(run_verif, otherwise = NULL, quiet= FALSE)
-print(possible_run_verif)
+#print(possible_run_verif)
 
 # Use imap from the purrr package to map each element of the params list
 # to the possible_run_verif function. imap passes the element of the list

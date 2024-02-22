@@ -1,13 +1,13 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2021010100
-  end_date: 2021010123
+  start_date: 2021010100 # 2024010100
+  end_date: 2021010123 # 2024010123
   
 pre:
-  fclen: 48
-  vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld"
-  vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs"
+  fclen: 24
+  vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld" # "/ec/res4/scratch/nhd/verification/vfld" # "/ec/res4/scratch/nhd/test_data_harp/vfld"
+  vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs" #"/ec/res4/scratch/nhd/verification/DMI_data/vobs/DMI" # "/ec/res4/scratch/nhd/test_data_harp/vobs"
   by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"
@@ -24,10 +24,10 @@ pre:
 verif:
   by_step: "12h"
   fcst_model:
-    - testmodel
+    - testmodel #enea43h22mbr000
   lead_time: seq(0, 24, 1)
   fcst_type: "det" #det or eps
-  grps: "leadtime"
+  grps: "lead_time"
   fcst_path: "/ec/res4/scratch/nhd/test_data_harp/FCTABLE"
   obs_path: "/ec/res4/scratch/nhd/test_data_harp/OBSTABLE"
   verif_path: "/ec/res4/scratch/nhd/test_data_harp/output/verif_results"
