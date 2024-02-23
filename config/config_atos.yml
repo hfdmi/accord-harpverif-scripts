@@ -1,13 +1,13 @@
 #Section to define paths for the pre-processing
 # This section will be used by the scripts under pre_processing
 shared:
-  start_date: 2021010100 # 2024010100
-  end_date: 2021010123 # 2024010123
+  start_date: 2021010100
+  end_date: 2021010123
   
 pre:
   fclen: 24
-  vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld" # "/ec/res4/scratch/nhd/verification/vfld" # "/ec/res4/scratch/nhd/test_data_harp/vfld"
-  vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs" #"/ec/res4/scratch/nhd/verification/DMI_data/vobs/DMI" # "/ec/res4/scratch/nhd/test_data_harp/vobs"
+  vfld_path: "/ec/res4/scratch/nhd/test_data_harp/vfld"
+  vobs_path: "/ec/res4/scratch/nhd/test_data_harp/vobs"
   by_vobs_step: "1h"
   vfld_template:  #include one for each model if they are different. 
     - "vfld"

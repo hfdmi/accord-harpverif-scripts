@@ -165,11 +165,12 @@ run_verif <- function(prm_info, prm_name) {
   }
   
   # Join observations to the forecast
+
   fcst <- join_to_fcst(fcst, obs, force=TRUE)
   # Check for errors removing obs that are more than a certain number 
   # of standard deviations from the forecast. You could add a number 
   # of standard deviations to use in the params list
-  fcst <- check_obs_against_fcst(fcst, prm_name)
+  fcst <- check_obs_against_fcst(fcst, {{prm_name}})
   
   # Make sure that grps is a list so that it adds on the vertical 
   # coordinate group correctly
@@ -183,11 +184,19 @@ run_verif <- function(prm_info, prm_name) {
     "height"   = purrr::map(grps, ~c(.x, "z")),
     grps
   )
-
   # add valid_hour to fcst
   #fcst <- mutate_list(fcst,valid_hour=substr(YMDh(valid_dttm),9,10))
   fcst <- expand_date(fcst,valid_dttm) # Add in valid_year, valid_month, valid_day, valid_hour
   #fcst <- rig(expand_date)(fcst,valid_dttm) # Add in valid_year, valid_month, valid_day, valid_hour  
+  #
+
+  # In the case of only one forecast model, convert fcst to a harp_list (which
+  # is assumed elsewhere)
+  if (length(fcst_model)==1){
+    fcst <- as_harp_list(fcst_model=fcst)
+    names(fcst) <- fcst_model
+  }
+
   fcst <- mutate_list(fcst,valid_hour = sprintf("%02d",valid_hour)) # Convert to character and pad
   # Remove stations that only occur very infrequently (for surface variables only)
   if (is.na(vertical_coordinate)){
@@ -218,13 +227,28 @@ run_verif <- function(prm_info, prm_name) {
   } else {
     grps_c <- grps
   }
-    
+
   verif <- get(verif_fn)(
-    fcst, prm_name, thresholds = prm_info$thresholds, groupings = grps_c
+    fcst, {{prm_name}}, thresholds = prm_info$thresholds, groupings = grps_c
   )
   verif <- fn_verif_rename(verif)
   verif_toplot <- verif # Used for passing to plotting script (as it may be modified below)
-  verif_toplot[[2]][["lead_time"]] <- as.character(verif_toplot[[2]][["lead_time"]]) # For plotting purposes
+
+  #this part replaced by the one below
+  #verif_toplot[[2]][["lead_time"]] <- as.character(verif_toplot[[2]][["lead_time"]]) # For plotting purposes
+
+   if (fcst_type == "eps"){
+  ft_str <- "ens"
+    } else {
+  ft_str <- fcst_type
+    }
+
+   t_s_str <- paste0(ft_str,"_threshold_scores")
+      if (!is.null(verif_toplot[[t_s_str]])){
+        verif_toplot[[t_s_str]][["lead_time"]] <-
+          as.character(verif_toplot[[t_s_str]][["lead_time"]]) # For plotting purposes
+      }
+
 
   
   # Do some additional verif depending on UA parameter
@@ -232,7 +256,7 @@ run_verif <- function(prm_info, prm_name) {
     # Group by valid_hour for profiles (threshold scores not required)
     grps_vh  <- lapply(grps_c,function(x) gsub("lead_time","valid_hour",x))
     verif_vh <-  get(verif_fn)(
-      fcst, prm_name, thresholds = NULL, groupings = grps_vh
+      fcst, {{prm_name}}, thresholds = NULL, groupings = grps_vh
     )
     verif_vh <- fn_verif_rename(verif_vh)
       

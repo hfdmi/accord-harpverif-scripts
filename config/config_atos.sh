@@ -11,8 +11,8 @@ export VERIF_DIR=/home/nhd/R/dev_accord/accord-verif-scripts #The location of th
 export CASE_STUDY=Spain_202205
 
 # What to run
-export RUN_POINT_VERF=${RUN_VERF-yes}
-export RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-no}
+export RUN_POINT_VERF=${RUN_VERF-no}
+export RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-yes}
 
 export SCORECARDS=${SCORECARDS-no}
 export RUN_VOBS2SQL=${RUN_VOBS2SQL-no}
