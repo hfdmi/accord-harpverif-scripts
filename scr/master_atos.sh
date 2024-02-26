@@ -13,6 +13,7 @@
 #set -x  
 
 source config/config_atos.sh
+source scr/parse_yaml.sh
 
 if [ "$RUN_VOBS2SQL" == "yes" ]; then
     echo "Running vobs2sql"
@@ -40,9 +41,19 @@ fi
 
 
 if [ "$SHOW_WEB_STATIC" == "yes" ]; then
-	$RS_DIR/visualization/shiny_launch_static.R
+   DIR_RES=$RS_DIR/../app_dir/cases/$CASE_STUDY
+   [ ! -d $DIR_RES ] && mkdir -p $DIR_RES
+   eval $(parse_yaml $MAIN_DIR/config/config_atos.yml)
+   echo "Copying all png files from $post_plot_output to $DIR_RES"
+   cp -R $post_plot_output/*/*png $DIR_RES
+  $RS_DIR/visualization/shiny_launch_static.R
 fi
 
 if [ "$SHOW_WEB_DYNAMIC" == "yes" ]; then
-        $RS_DIR/visualization/shiny_launch_dynamic.R
+   DIR_RES=$RS_DIR/../app_dir/cases/$CASE_STUDY/rds_files
+   [ ! -d $DIR_RES ] && mkdir -p $DIR_RES
+   eval $(parse_yaml $MAIN_DIR/config/config_atos.yml)
+   echo "Copying all rds files from $post_plot_output/verif_results/*rds to $DIR_RES"
+   cp -R $post_plot_output/verif_results/*rds $DIR_RES
+  $RS_DIR/visualization/shiny_launch_dynamic.R
 fi

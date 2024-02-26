@@ -8,18 +8,18 @@ CONFIG_INITIAL=config_atos
 USING_RENV=${USING_RENV-no}
 
 export VERIF_DIR=/home/nhd/R/dev_accord/accord-verif-scripts #The location of this repo
-export CASE_STUDY=Spain_202205
+export CASE_STUDY=testmodel
 
 # What to run
 export RUN_POINT_VERF=${RUN_VERF-no}
-export RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-yes}
+export RUN_POINT_VERF_LOCAL=${RUN_POINT_VERF_LOCAL-no}
 
 export SCORECARDS=${SCORECARDS-no}
 export RUN_VOBS2SQL=${RUN_VOBS2SQL-no}
 export RUN_VFLD2SQL=${RUN_VFLD2SQL-no}
 
 export SHOW_WEB_STATIC=no
-export SHOW_WEB_DYNAMIC=no
+export SHOW_WEB_DYNAMIC=yes
 export SHINY_PORT=3699 # Change this number if port is busy when launching web
 
 
