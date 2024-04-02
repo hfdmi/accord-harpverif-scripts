@@ -63,12 +63,12 @@ scorecard_function <- function(
        groupings = groupings)
        #parallel=TRUE)
   } else {
-    pooled_bootstrap_score(
+    bootstrap_verify(
       fcst,
       ens_verify,
       {{param}},
-      n         = n,
-      pooled_by = pooled_by,
+      n = n,
+      pool_by = pooled_by,
       min_cases = min_cases,
       groupings = groupings
     )

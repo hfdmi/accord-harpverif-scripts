@@ -102,12 +102,17 @@ scorecard_data <- bind_point_verif(scorecard_data)
 #The naming of the output file is set automatically. Not changing it at this point
 #to avoid clashes with the shiny app
 #save_point_verif(scorecard_data,".") #not saving this, no point
+if (fcst_type == "det") {
+    vscore <- c("rmse", "stde", "bias")
+} else {
+    vscore <- c("crps", "spread_skill_ratio", "mean_bias")
+}
 
 plot <- plot_scorecard(
   scorecard_data,
   fcst_model = fcst_model,
   ref_model  = ref_model,
-  scores     = c("rmse", "stde", "bias")
+  scores     = vscores
 ) + theme(legend.text = element_text(size = 6)) #+ ggtitle(figtitle)
 
 #ggsave(savepath)
